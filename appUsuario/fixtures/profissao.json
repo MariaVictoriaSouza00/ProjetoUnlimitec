@@ -1,0 +1,13 @@
+[
+    {"model": "appUsuario.profissao", "pk": 1, "fields": {"nome": "Desenvolvedor de Software"}},
+    {"model": "appUsuario.profissao", "pk": 2, "fields": {"nome": "Professor"}},
+    {"model": "appUsuario.profissao", "pk": 3, "fields": {"nome": "Enfermeiro"}},
+    {"model": "appUsuario.profissao", "pk": 4, "fields": {"nome": "Advogado"}},
+    {"model": "appUsuario.profissao", "pk": 5, "fields": {"nome": "Engenheiro Civil"}},
+    {"model": "appUsuario.profissao", "pk": 6, "fields": {"nome": "Designer Gráfico"}},
+    {"model": "appUsuario.profissao", "pk": 7, "fields": {"nome": "Administrador"}},
+    {"model": "appUsuario.profissao", "pk": 8, "fields": {"nome": "Psicólogo"}},
+    {"model": "appUsuario.profissao", "pk": 9, "fields": {"nome": "Médico"}},
+    {"model": "appUsuario.profissao", "pk": 10, "fields": {"nome": "Veterinário"}}
+  ]
+  

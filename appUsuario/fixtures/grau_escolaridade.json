@@ -1,0 +1,11 @@
+[
+  {"model": "appUsuario.grauescolaridade", "pk": 1, "fields": {"nome": "Ensino Fundamental Incompleto"}},
+  {"model": "appUsuario.grauescolaridade", "pk": 2, "fields": {"nome": "Ensino Fundamental Completo"}},
+  {"model": "appUsuario.grauescolaridade", "pk": 3, "fields": {"nome": "Ensino Médio Incompleto"}},
+  {"model": "appUsuario.grauescolaridade", "pk": 4, "fields": {"nome": "Ensino Médio Completo"}},
+  {"model": "appUsuario.grauescolaridade", "pk": 5, "fields": {"nome": "Superior Incompleto"}},
+  {"model": "appUsuario.grauescolaridade", "pk": 6, "fields": {"nome": "Superior Completo"}},
+  {"model": "appUsuario.grauescolaridade", "pk": 7, "fields": {"nome": "Pós-graduação"}},
+  {"model": "appUsuario.grauescolaridade", "pk": 8, "fields": {"nome": "Mestrado"}},
+  {"model": "appUsuario.grauescolaridade", "pk": 9, "fields": {"nome": "Doutorado"}}
+]
