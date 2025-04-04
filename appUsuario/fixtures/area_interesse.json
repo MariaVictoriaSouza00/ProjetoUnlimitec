@@ -1,0 +1,13 @@
+[
+    {"model": "appUsuario.areainteresse", "pk": 1, "fields": {"nome": "Tecnologia da Informação"}},
+    {"model": "appUsuario.areainteresse", "pk": 2, "fields": {"nome": "Educação"}},
+    {"model": "appUsuario.areainteresse", "pk": 3, "fields": {"nome": "Saúde"}},
+    {"model": "appUsuario.areainteresse", "pk": 4, "fields": {"nome": "Engenharia"}},
+    {"model": "appUsuario.areainteresse", "pk": 5, "fields": {"nome": "Meio Ambiente"}},
+    {"model": "appUsuario.areainteresse", "pk": 6, "fields": {"nome": "Direito"}},
+    {"model": "appUsuario.areainteresse", "pk": 7, "fields": {"nome": "Administração"}},
+    {"model": "appUsuario.areainteresse", "pk": 8, "fields": {"nome": "Comunicação"}},
+    {"model": "appUsuario.areainteresse", "pk": 9, "fields": {"nome": "Design"}},
+    {"model": "appUsuario.areainteresse", "pk": 10, "fields": {"nome": "Agricultura"}}
+  ]
+  
