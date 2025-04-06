@@ -1,0 +1,44 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-left">
+           
+        </div>
+        <div class="navbar-right">
+            <a href="#">Sobre o Projeto</a>
+            <a href="#">Contate-nos</a>
+            <a href="#">Cadastre-se</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="login-box">
+            <h2>Entrar</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="E-mail" required style="padding: 10px 5px 10px 5px;">
+                <div class="password-wrapper" >
+                    <input type="password" name="senha" placeholder="Senha" id="senha" required style="padding: 10px 5px 10px 5px;">
+                    <span class="toggle-password" onclick="toggleSenha()">👁️</span>
+                </div>
+                <a href="#">Esqueci a senha</a>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleSenha() {
+            const senhaInput = document.getElementById("senha");
+            senhaInput.type = senhaInput.type === "password" ? "text" : "password";
+        }
+    </script>
+</body>
+</html>
