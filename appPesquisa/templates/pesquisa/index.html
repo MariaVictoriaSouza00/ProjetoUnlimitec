@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Chamadas Públicas</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #007bff;
+      color: white;
+      padding: 1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      margin: 0 1em;
+      text-decoration: none;
+    }
+
+    /* Estrutura principal */
+    .container {
+      display: flex;
+    }
+
+    .propaganda {
+      width: 10%;
+      background-color: #e1e1e1;
+      min-height: 100vh;
+    }
+
+    .conteudo-principal {
+      flex: 1;
+      padding: 2em;
+      background-color: #ffffff;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 1em;
+    }
+
+    .botoes button {
+      margin-right: 10px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .botoes button:hover {
+      background-color: #0056b3;
+    }
+
+    #barra-pesquisa {
+      padding: 8px;
+      width: 300px;
+      margin-bottom: 1em;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .acordeon-lista {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .acordeon-item {
+      border-bottom: 1px solid #dcdcdc;
+      padding: 16px;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.2s;
+    }
+
+    .acordeon-item:hover {
+      background-color: #f9f9f9;
+    }
+
+    .acordeon-titulo {
+      font-weight: 500;
+      color: #003366;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .acordeon-titulo::after {
+      content: "\25BE";
+      font-size: 14px;
+      color: #666;
+      transition: transform 0.3s ease;
+    }
+
+    .acordeon-item.ativo .acordeon-titulo::after {
+      transform: rotate(-180deg);
+    }
+
+    .acordeon-conteudo {
+      display: none;
+      padding-top: 8px;
+      font-size: 13px;
+      color: #444;
+    }
+
+    .acordeon-item.ativo .acordeon-conteudo {
+      display: block;
+    }
+    .acordeon-lista {
+  list-style: none;
+  padding: 0;
+  margin-top: 1em;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.acordeon-item {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.acordeon-item:hover {
+  background-color: #f0f8ff;
+}
+
+.acordeon-titulo {
+  font-weight: bold;
+  color: #0056b3;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.acordeon-titulo::after {
+  content: "\25BC"; /* seta para baixo */
+  font-size: 12px;
+  color: #666;
+  transition: transform 0.3s ease;
+}
+
+.acordeon-item.ativo .acordeon-titulo::after {
+  transform: rotate(180deg); /* vira a seta */
+}
+
+.acordeon-conteudo {
+  display: none;
+  padding: 10px 0 0 0;
+  font-size: 14px;
+  color: #333;
+  word-wrap: break-word;
+}
+
+.acordeon-conteudo a {
+  color: #007bff;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.acordeon-conteudo a:hover {
+  text-decoration: underline;
+}
+
+.acordeon-item.ativo .acordeon-conteudo {
+  display: block;
+  margin-top: 6px;
+}
+/* Campo de busca com ícone */
+#barra-pesquisa {
+  padding: 10px 10px 10px 36px;
+  width: 250px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  background: #f5f5f5 url('https://cdn-icons-png.flaticon.com/512/16/16492.png') no-repeat 10px center;
+  background-size: 16px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Botões ao lado */
+.botoes {
+  display: inline-flex;
+}
+
+.botoes button {
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#btn-limpar {
+  background-color: #ccc;
+  color: white;
+  border-radius: 0;
+}
+
+#btn-oi {
+  background-color: #007bff;
+  color: white;
+  border-radius: 0;
+}
+
+#btn-links {
+  background-color: #0056b3;
+  color: white;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Acordeon */
+.acordeon-lista {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.acordeon-item {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 10px;
+  cursor: pointer;
+}
+
+.acordeon-titulo {
+  font-size: 14px;
+  color: #003366;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: normal;
+}
+
+.acordeon-titulo::after {
+  content: "\25BE"; /* seta */
+  font-size: 12px;
+  color: #999;
+  transition: transform 0.3s ease;
+}
+
+.acordeon-item.ativo .acordeon-titulo::after {
+  transform: rotate(-180deg);
+}
+
+.acordeon-conteudo {
+  display: none;
+  font-size: 13px;
+  color: #555;
+  padding-top: 6px;
+}
+
+.acordeon-conteudo a {
+  color: #007bff;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.acordeon-conteudo a:hover {
+  text-decoration: underline;
+}
+
+.acordeon-item.ativo .acordeon-conteudo {
+  display: block;
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">LOGO</div>
+    <div class="links">
+      <a href="#">Propaganda</a>
+      <a href="#">Sobre o Projeto</a>
+      <a href="#">Contate-nos</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="propaganda"></div>
+
+    <div class="conteudo-principal">
+      <h2>Chamadas Públicas Abertas</h2>
+      <input type="text" id="barra-pesquisa" placeholder="Pesquisar chamada...">
+      <div class="botoes">
+        <button id="btn-links">🔗 Links</button>
+        <button id="btn-limpar">🧹 Limpar</button>
+        <button id="btn-oi">👋 Oi</button>
+      </div>
+      <div id="conteudo-dinamico">
+        <ul id="lista-chamadas" class="acordeon-lista"></ul>
+      </div>
+    </div>
+
+    <div class="propaganda"></div>
+  </div>
+
+  <script>
+    const conteudo = document.getElementById("conteudo-dinamico");
+    const barraPesquisa = document.getElementById("barra-pesquisa");
+
+    document.getElementById("btn-links").addEventListener("click", async () => {
+      conteudo.innerHTML = "<ul id='lista-chamadas' class='acordeon-lista'></ul>";
+      const ul = document.getElementById("lista-chamadas");
+
+      const loading = document.createElement("div");
+      loading.innerText = "🔄 Carregando chamadas...";
+      ul.parentNode.insertBefore(loading, ul);
+
+      try {
+        const response = await fetch("{% url 'buscar_titulos_ajax' %}", {
+          headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+
+        const data = await response.json();
+
+        if (data.titulos && data.titulos.length > 0) {
+          data.titulos.forEach(item => {
+            const li = document.createElement("li");
+            li.className = "acordeon-item";
+
+            const titulo = document.createElement("div");
+            titulo.className = "acordeon-titulo";
+            titulo.textContent = item.titulo;
+
+            const conteudo = document.createElement("div");
+            conteudo.className = "acordeon-conteudo";
+            conteudo.innerHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.link}</a>`;
+
+            titulo.addEventListener("click", () => {
+              li.classList.toggle("ativo");
+            });
+
+            li.appendChild(titulo);
+            li.appendChild(conteudo);
+            ul.appendChild(li);
+          });
+        } else {
+          ul.innerHTML = "<li class='acordeon-item'>Nenhuma chamada pública encontrada.</li>";
+        }
+      } catch (e) {
+        ul.innerHTML = "<li class='acordeon-item'>Erro ao carregar os dados.</li>";
+      } finally {
+        loading.remove();
+      }
+    });
+
+    document.getElementById("btn-limpar").addEventListener("click", () => {
+      conteudo.innerHTML = "<ul id='lista-chamadas' class='acordeon-lista'></ul>";
+    });
+
+    document.getElementById("btn-oi").addEventListener("click", async () => {
+      const resp = await fetch("{% url 'definicao' %}");
+      const html = await resp.text();
+      conteudo.innerHTML = html;
+    });
+
+    barraPesquisa.addEventListener("input", () => {
+      const termo = barraPesquisa.value.toLowerCase();
+      const itens = conteudo.querySelectorAll("li");
+      itens.forEach(li => {
+        const texto = li.textContent.toLowerCase();
+        li.style.display = texto.includes(termo) ? "" : "none";
+      });
+    });
+  </script>
+</body>
+</html>

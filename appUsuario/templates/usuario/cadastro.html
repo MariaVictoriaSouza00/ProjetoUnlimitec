@@ -1,16 +1,84 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
+    <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
 </head>
 <body>
-    <h2>Cadastro de Usuário</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Cadastrar</button>
-    </form>
+    <!-- Topo -->
+    <div class="topo">
+        <div class="menu">
+            <a href="#">Sobre o Projeto</a>
+            <a href="#">Contate-nos</a>
+            <a href="#">Cadastre-se ▾</a>
+        </div>
+    </div>
+
+    <!-- Formulário -->
+    <div class="form-box">
+        <h2>Cadastre sua conta</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="input-group">
+                    {{ form.nome.label_tag }} {{ form.nome }}
+                </div>
+                <div class="input-group">
+                    {{ form.celular.label_tag }} {{ form.celular }}
+                </div>
+                <div class="input-group">
+                    {{ form.email.label_tag }} {{ form.email }}
+                </div>
+                <div class="input-group">
+                    {{ form.senha.label_tag }} {{ form.senha }}
+                </div>
+                <div class="input-group">
+                    {{ form.estado.label_tag }} {{ form.estado }}
+                </div>
+                <div class="input-group">
+                    {{ form.cidade.label_tag }} {{ form.cidade }}
+                </div>
+                <div class="input-group">
+                    {{ form.logradouro.label_tag }} {{ form.logradouro }}
+                </div>
+               
+            </div>
+            <div class="btn-box">
+                <button type="submit">Próximo &gt;&gt;</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#id_estado').change(function () {
+            var estadoId = $(this).val();
+            if (estadoId) {
+                $.ajax({
+                    url: '{% url "carregar_cidades" %}',
+                    data: {
+                        'estado': estadoId
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#id_cidade').empty();
+                        $('#id_cidade').append('<option value="">---------</option>');
+                        $.each(data.cidades, function (key, value) {
+                            $('#id_cidade').append('<option value="' + value.id + '">' + value.nome + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#id_cidade').empty();
+                $('#id_cidade').append('<option value="">---------</option>');
+            }
+        });
+    });
+</script>
+

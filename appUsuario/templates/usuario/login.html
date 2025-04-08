@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -9,22 +8,29 @@
 </head>
 <body>
     <div class="navbar">
-        <div class="navbar-left">
-           
-        </div>
+        <div class="navbar-left"></div>
         <div class="navbar-right">
             <a href="#">Sobre o Projeto</a>
             <a href="#">Contate-nos</a>
             <a href="#">Cadastre-se</a>
         </div>
     </div>
+
     <div class="container">
         <div class="login-box">
             <h2>Entrar</h2>
+
+            <!-- MENSAGEM DE ERRO -->
+            {% if erro %}
+            <div id="mensagem-erro" style="color: red; margin-bottom: 10px;">
+                {{ erro }}
+            </div>
+            {% endif %}
+
             <form method="POST">
                 {% csrf_token %}
                 <input type="email" name="email" placeholder="E-mail" required style="padding: 10px 5px 10px 5px;">
-                <div class="password-wrapper" >
+                <div class="password-wrapper">
                     <input type="password" name="senha" placeholder="Senha" id="senha" required style="padding: 10px 5px 10px 5px;">
                     <span class="toggle-password" onclick="toggleSenha()">👁️</span>
                 </div>
@@ -34,11 +40,22 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script>
         function toggleSenha() {
             const senhaInput = document.getElementById("senha");
             senhaInput.type = senhaInput.type === "password" ? "text" : "password";
         }
+
+        // Ocultar a mensagem de erro após 5 segundos
+        window.addEventListener('DOMContentLoaded', () => {
+            const erroDiv = document.getElementById("mensagem-erro");
+            if (erroDiv) {
+                setTimeout(() => {
+                    erroDiv.style.display = "none";
+                }, 5000);
+            }
+        });
     </script>
 </body>
 </html>
