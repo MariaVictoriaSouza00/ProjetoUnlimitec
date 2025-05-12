@@ -69,8 +69,8 @@
       </a>
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="#">Propaganda</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Sobre o Projeto</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Ínicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">conheça a Plataforma</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Contate-nos</a></li>
         </ul>
       </div>
@@ -81,20 +81,18 @@
     <div class="row">
       <!-- Sidebar esquerda -->
       <div class="col-lg-2 d-none d-lg-block sidebar">
-        <img src="https://i.ibb.co/WN7Z4PFj/Cart-o-de-Visita-Arredondado-Audiovisual-Simples-Azul-Branco-3.png" class="img-fluid" alt="Anúncio">
       </div>
 
       <!-- Conteúdo principal -->
       <div class="col-12 col-lg-8">
-        <div class="text-center mb-4">
-          <h2>Chamadas Públicas Abertas</h2>
-        </div>
+        <br>
+        <br>
 
         <div class="input-group mb-4">
-          <input type="text" id="barra-pesquisa" class="form-control" placeholder="Pesquisar chamada...">
-          <button class="btn btn-outline-secondary" id="btn-links">🔗 Links</button>
-          <button class="btn btn-outline-secondary" id="btn-limpar">🧹 Limpar</button>
-          <button class="btn btn-outline-primary" id="btn-oi">👋 Oi</button>
+          <input type="text" id="barra-pesquisa" class="form-control" placeholder="Digite sua Pesquisa...">
+          <button class="btn btn-secondary" id="btn-limpar">Limpar</button>
+          <button class="btn btn-primary" id="btn-pesquisa">Pesquisa</button>
+          <button class="btn btn-primary" id="btn-links">Fomento</button>
         </div>
 
         <div id="conteudo-dinamico">
@@ -104,7 +102,6 @@
 
       <!-- Sidebar direita -->
       <div class="col-lg-2 d-none d-lg-block sidebar">
-        <img src="https://i.ibb.co/WN7Z4PFj/Cart-o-de-Visita-Arredondado-Audiovisual-Simples-Azul-Branco-3.png" class="img-fluid" alt="Anúncio">
       </div>
     </div>
   </div>
@@ -113,24 +110,37 @@
   <script>
     const conteudo = document.getElementById("conteudo-dinamico");
     const barraPesquisa = document.getElementById("barra-pesquisa");
-
+  
+    function validarTermo() {
+      const termo = barraPesquisa.value.trim();
+      if (!termo) {
+        alert("Digite um termo de pesquisa antes de continuar.");
+        return false;
+      }
+      return true;
+    }
+  
     document.getElementById("btn-links").addEventListener("click", async () => {
+      if (!validarTermo()) return;
+  
       const lista = document.getElementById("lista-chamadas");
       lista.innerHTML = "🔄 Carregando chamadas...";
-
+  
+      const termoPesquisa = barraPesquisa.value.toLowerCase().trim();
+  
       try {
-        const response = await fetch("{% url 'buscar_titulos_ajax' %}", {
+        const response = await fetch("{% url 'buscar_titulos_ajax' %}?termo=" + encodeURIComponent(termoPesquisa), {
           headers: { "X-Requested-With": "XMLHttpRequest" }
         });
-
+  
         const data = await response.json();
         lista.innerHTML = "";
-
+  
         if (data.titulos && data.titulos.length > 0) {
           data.titulos.forEach((item, index) => {
             const accordionItem = document.createElement("div");
             accordionItem.className = "accordion-item";
-
+  
             accordionItem.innerHTML = `
               <h2 class="accordion-header" id="heading${index}">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
@@ -152,17 +162,20 @@
         lista.innerHTML = "<div class='text-danger'>Erro ao carregar os dados.</div>";
       }
     });
-
+  
     document.getElementById("btn-limpar").addEventListener("click", () => {
       document.getElementById("lista-chamadas").innerHTML = "";
+      barraPesquisa.value = ""; // limpa o input também
     });
-
-    document.getElementById("btn-oi").addEventListener("click", async () => {
+  
+    document.getElementById("btn-pesquisa").addEventListener("click", async () => {
+      if (!validarTermo()) return;
+  
       const resp = await fetch("{% url 'definicao' %}");
       const html = await resp.text();
       conteudo.innerHTML = html;
     });
-
+  
     barraPesquisa.addEventListener("input", () => {
       const termo = barraPesquisa.value.toLowerCase();
       const itens = document.querySelectorAll(".accordion-item");
@@ -172,7 +185,7 @@
       });
     });
   </script>
-
+  
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
