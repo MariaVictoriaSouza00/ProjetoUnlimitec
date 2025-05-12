@@ -59,9 +59,8 @@ WSGI_APPLICATION = 'unlimitec.wsgi.application'
 # 🌐 Banco de dados: usa PostgreSQL no Render e SQLite no dev
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-        conn_max_age=600,
-        ssl_require=True
+        default='sqlite:///db.sqlite3',  # ou caminho absoluto se preferir
+        conn_max_age=600
     )
 }
 
