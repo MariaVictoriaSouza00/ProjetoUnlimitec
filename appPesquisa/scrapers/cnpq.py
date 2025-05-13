@@ -10,30 +10,37 @@ from bs4 import BeautifulSoup
 def obter_titulos_cnpq():
     dados = []
 
+    # Configura o Chrome para rodar em modo headless
     options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--window-size=1920,1080")
-    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36")
+    options.add_argument("--headless")  # Modo headless (sem interface gráfica)
+    options.add_argument("--disable-gpu")  # Desativa o uso da GPU (reduz o uso de recursos)
+    options.add_argument("--no-sandbox")  # Necessário em alguns ambientes de servidor (como Docker)
+    options.add_argument("--window-size=1920,1080")  # Definir uma janela "virtual" para o navegador
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36")  # Definir um user-agent
 
+    # Inicia o WebDriver com o ChromeDriver automatizado via webdriver-manager
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver.get("http://memoria2.cnpq.br/web/guest/chamadas-publicas?p_p_id=resultadosportlet_WAR_resultadoscnpqportlet_INSTANCE_0ZaM&filtro=abertas&ano=2025")
 
     try:
+        driver.get("http://memoria2.cnpq.br/web/guest/chamadas-publicas?p_p_id=resultadosportlet_WAR_resultadoscnpqportlet_INSTANCE_0ZaM&filtro=abertas&ano=2025")
+
+        # Espera até que os elementos necessários carreguem
         WebDriverWait(driver, 15).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.content h4"))
         )
 
+        # Usando BeautifulSoup para processar o HTML da página carregada
         soup = BeautifulSoup(driver.page_source, "html.parser")
         elementos = soup.select("div.content h4")
 
         for h4 in elementos:
             titulo = h4.get_text(strip=True)
 
+            # Obtendo o link da chamada
             link_tag = h4.find_parent("a")
             link = link_tag["href"] if link_tag and link_tag.has_attr("href") else driver.current_url
 
+            # Obtendo o parágrafo de resumo
             paragrafo = ""
             p_tag = h4.find_next_sibling("p")
             if not p_tag:
@@ -54,6 +61,7 @@ def obter_titulos_cnpq():
                     if li_tag:
                         data_inscricao = li_tag.get_text(strip=True)
 
+            # Adiciona os dados coletados à lista de resultados
             dados.append({
                 "titulo": titulo,
                 "link": link,
@@ -65,6 +73,6 @@ def obter_titulos_cnpq():
         print("❌ Erro ao buscar dados do CNPq:", e)
 
     finally:
-        driver.quit()
+        driver.quit()  # Garante que o driver seja fechado corretamente
 
     return dados
