@@ -1,11 +1,17 @@
 from pathlib import Path
 import os
-import dj_database_url  # 📦 para conectar com o banco do Render
+import dj_database_url 
+from decouple import config
+from dotenv import load_dotenv
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ⚠️ Segurança – usa SECRET_KEY da variável de ambiente
-SECRET_KEY = os.environ.get('SECRET_KEY', 'chave-insegura-para-dev')
+# Carregar as variáveis do arquivo .env
+load_dotenv()
+
+
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'AIzaSyB6AjtgDSyRUK7_xqs0S_nU6uZ8UgYq1ls')
 
 # 🔒 Desativa debug em produção
 DEBUG = 'RENDER' not in os.environ

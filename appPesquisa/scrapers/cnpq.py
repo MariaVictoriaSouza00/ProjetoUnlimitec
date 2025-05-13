@@ -30,17 +30,40 @@ def obter_titulos_cnpq():
 
         for h4 in elementos:
             titulo = h4.get_text(strip=True)
+
             link_tag = h4.find_parent("a")
+            link = link_tag["href"] if link_tag and link_tag.has_attr("href") else driver.current_url
 
-            if link_tag and link_tag.has_attr("href"):
-                link = link_tag["href"]
-            else:
-                link = driver.current_url  # fallback genérico
+            paragrafo = ""
+            p_tag = h4.find_next_sibling("p")
+            if not p_tag:
+                parent_div = h4.find_parent("div", class_="content")
+                if parent_div:
+                    p_tag = parent_div.find("p")
 
-            dados.append({"titulo": titulo, "link": link})
+            if p_tag:
+                paragrafo = p_tag.get_text(strip=True)
+
+            # Pegando a data de inscrição
+            data_inscricao = ""
+            parent_div = h4.find_parent("div", class_="content")
+            if parent_div:
+                inscricao_div = parent_div.find("div", class_="inscricao")
+                if inscricao_div:
+                    li_tag = inscricao_div.find("li")
+                    if li_tag:
+                        data_inscricao = li_tag.get_text(strip=True)
+
+            dados.append({
+                "titulo": titulo,
+                "link": link,
+                "resumo": paragrafo,
+                "prazo_envio": data_inscricao
+            })
 
     except Exception as e:
-        print("❌ Erro ao buscar títulos do CNPq:", e)
+        print("❌ Erro ao buscar dados do CNPq:", e)
+
     finally:
         driver.quit()
 
