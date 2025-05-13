@@ -149,10 +149,15 @@
               </h2>
               <div id="collapse${index}" class="accordion-collapse collapse" data-bs-parent="#lista-chamadas">
                 <div class="accordion-body">
-                  <a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.link}</a>
+                  <p><strong>Resumo:</strong> ${item.resumo || 'Não disponível'}</p>
+                  <p><strong>Data de Publicação:</strong> ${item.data_publicacao || 'Não informado'}</p>
+                  <p><strong>Prazo de Envio:</strong> ${item.prazo_envio || 'Não informado'}</p>
+                  <p><strong>Público Alvo:</strong> ${item.publico_alvo || 'Não informado'}</p>
+                  ${item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer">Acesse o edital</a>` : ''}
                 </div>
               </div>
             `;
+
             lista.appendChild(accordionItem);
           });
         } else {

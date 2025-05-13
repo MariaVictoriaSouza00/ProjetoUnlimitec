@@ -2,11 +2,15 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import threading
 import requests
+from django.conf import settings
+from functools import lru_cache
 
+# Scrapers
 from appPesquisa.scrapers.finep import obter_titulos_finep
 from appPesquisa.scrapers.cnpq import obter_titulos_cnpq
 from appPesquisa.scrapers.fundect import obter_titulos_fundect
 
+# ========================== Scrapers ==========================
 def obter_todos_titulos():
     resultados = []
 
@@ -30,10 +34,17 @@ def obter_todos_titulos():
 
     return resultados
 
-# View principal que apenas renderiza a página
+# ========================== Views ==========================
 def tela_index(request):
     return render(request, 'pesquisa/index.html')
 
+def fomento(request):
+    return render(request, 'pesquisa/fomento.html')
+
+def definicao(request):
+    return render(request, 'pesquisa/definicao.html')
+
+# ========================== Sinonímia ==========================
 def obter_sinonimos_api(termo):
     url = f"https://api.datamuse.com/words?rel_syn={termo}&max=3"
     response = requests.get(url)
@@ -45,25 +56,22 @@ def obter_sinonimos_api(termo):
 
     return [termo] + sinonimos
 
+
+# ========================== Busca AJAX ==========================
 def buscar_titulos_ajax(request):
     termo_pesquisa = request.GET.get("termo", "").lower()
+
     if request.method == "GET" and request.headers.get("x-requested-with") == "XMLHttpRequest":
         titulos = obter_todos_titulos()
-
-        # Obtemos os sinônimos da palavra digitada
         sinonimos = obter_sinonimos_api(termo_pesquisa)
 
-        # Filtrar com base no termo e seus sinônimos
         if termo_pesquisa:
-            titulos = [titulo for titulo in titulos if any(
-                termo in titulo['titulo'].lower() for termo in sinonimos)]
+            titulos = [
+                titulo for titulo in titulos
+                if any(termo in titulo['titulo'].lower() for termo in sinonimos)
+            ]
 
+      
         return JsonResponse({'titulos': titulos})
 
     return JsonResponse({'erro': 'Requisição inválida'}, status=400)
-
-def fomento(request):
-    return render(request, 'pesquisa/fomento.html')  
-    
-def definicao(request):
-    return render(request, 'pesquisa/definicao.html') 
