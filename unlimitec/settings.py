@@ -11,14 +11,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'AIzaSyB6AjtgDSyRUK7_xqs0S_nU6uZ8UgYq1ls')
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'AIzaSyAbSqpS5acpof1oLBV_XJkBxpGG0ScUV1w')
+SECRET_KEY = os.getenv("SECRET_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # 🔒 Desativa debug em produção
-DEBUG = 'RENDER' not in os.environ
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # 🛡️ Define hosts permitidos (Render e local)
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'unlimitec.onrender.com']
+ALLOWED_HOSTS = ['.onrender.com']
 
 # Apps instalados
 INSTALLED_APPS = [
