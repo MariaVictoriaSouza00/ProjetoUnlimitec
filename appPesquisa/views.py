@@ -12,6 +12,10 @@ from appPesquisa.scrapers.cnpq import obter_titulos_cnpq
 from appPesquisa.scrapers.fundect import obter_titulos_fundect
 
 # ========================== Scrapers ==========================
+# View para verificar a saúde da aplicação
+def health_check(request):
+    return JsonResponse({"status": "ok"})
+
 def obter_todos_titulos():
     resultados = []
 
