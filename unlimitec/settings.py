@@ -12,6 +12,7 @@ load_dotenv()
 
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'AIzaSyB6AjtgDSyRUK7_xqs0S_nU6uZ8UgYq1ls')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'AIzaSyAbSqpS5acpof1oLBV_XJkBxpGG0ScUV1w')
 
 # 🔒 Desativa debug em produção
 DEBUG = 'RENDER' not in os.environ

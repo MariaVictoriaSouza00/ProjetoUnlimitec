@@ -4,6 +4,7 @@ import threading
 import requests
 from django.conf import settings
 from functools import lru_cache
+from appPesquisa.utils.resumo import resumir_texto_com_gemini  # <- usando a função corretamente
 
 # Scrapers
 from appPesquisa.scrapers.finep import obter_titulos_finep
@@ -56,7 +57,6 @@ def obter_sinonimos_api(termo):
 
     return [termo] + sinonimos
 
-
 # ========================== Busca AJAX ==========================
 def buscar_titulos_ajax(request):
     termo_pesquisa = request.GET.get("termo", "").lower()
@@ -71,7 +71,12 @@ def buscar_titulos_ajax(request):
                 if any(termo in titulo['titulo'].lower() for termo in sinonimos)
             ]
 
-      
+        # Aplica a função Gemini para resumir
+        for titulo in titulos:
+            resumo_original = titulo.get("resumo", "")
+            if resumo_original:
+                titulo["resumo"] = resumir_texto_com_gemini(resumo_original)
+
         return JsonResponse({'titulos': titulos})
 
     return JsonResponse({'erro': 'Requisição inválida'}, status=400)
