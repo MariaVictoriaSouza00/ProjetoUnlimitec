@@ -2,7 +2,6 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
 
 def configurar_driver():
     options = Options()
@@ -10,11 +9,11 @@ def configurar_driver():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     
-    # Tentando encontrar o Google Chrome no sistema
-    chrome_path = "C:/Program Files/Google/Chrome/Application/chrome.exe"  # Caminho padrão do Chrome
-    chromium_path = "C:/Caminho/para/o/Chromium/chrome.exe"  # Caminho do Chromium se necessário
+    # Caminhos para o Chrome e o Chromium
+    chrome_path = "C:/Program Files/Google/Chrome/Application/chrome.exe"  # Caminho do Chrome
+    chromium_path = "C:/chromium/chrome.exe"  # Caminho do Chromium (caso você tenha instalado)
 
-    # Verifica se o Google Chrome está instalado, caso contrário, use o Chromium
+    # Verifica se o Google Chrome está instalado, caso contrário, usa o Chromium
     if not os.path.exists(chrome_path):
         if os.path.exists(chromium_path):
             print("Chrome não encontrado, usando Chromium.")
