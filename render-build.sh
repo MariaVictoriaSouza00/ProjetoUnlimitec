@@ -1,1 +1,2 @@
-chmod +x render-build.sh
+#!/usr/bin/env bash
+playwright install --with-deps
