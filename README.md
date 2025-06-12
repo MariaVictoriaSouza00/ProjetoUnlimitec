@@ -1,4 +1,4 @@
-# 🧠 Sistema de Consulta Técnica com IA
+# 🧠 NomeDoSistema :Desenvolvimento de uma plataforma inteligente para centralizar e facilitar o Acesso a Informações Científicas
 
 Este projeto é uma plataforma web desenvolvida em Django que permite a consulta de termos técnicos por meio de inteligência artificial, extração de informações de documentos públicos e apresentação de dados de forma integrada.
 
@@ -42,7 +42,7 @@ Este projeto é uma plataforma web desenvolvida em Django que permite a consulta
 
 A aplicação está hospedada gratuitamente na plataforma Render e pode ser acessada através do link abaixo:
 
-🔗 [Acessar sistema online](https://nome-do-projeto.onrender.com)
+🔗 [Acessar sistema online]([https://nome-do-projeto.onrender.com](https://projetounlimitec-1.onrender.com/ )
 
 > *Nota: o deploy foi realizado com integração contínua via GitHub. Alterações no repositório são automaticamente refletidas na versão em produção.*
 
