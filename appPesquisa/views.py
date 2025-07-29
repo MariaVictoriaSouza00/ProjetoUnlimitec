@@ -72,8 +72,12 @@ def buscar_titulos_ajax(request):
         if termo_pesquisa:
             titulos = [
                 titulo for titulo in titulos
-                if any(termo in titulo['titulo'].lower() for termo in sinonimos)
+                if any(
+                    termo in titulo.get('titulo', '').lower() or termo in titulo.get('resumo', '').lower()
+                    for termo in sinonimos
+                )
             ]
+
 
         # Aplica a função Gemini para resumir
         for titulo in titulos:
