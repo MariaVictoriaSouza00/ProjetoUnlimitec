@@ -5,6 +5,7 @@ import requests
 from django.conf import settings
 from functools import lru_cache
 from appPesquisa.utils.resumo import resumir_texto_com_gemini  # <- usando a função corretamente
+import markdown
 
 # Scrapers
 from appPesquisa.scrapers.finep import obter_titulos_finep
@@ -88,3 +89,60 @@ def buscar_titulos_ajax(request):
         return JsonResponse({'titulos': titulos})
 
     return JsonResponse({'erro': 'Requisição inválida'}, status=400)
+
+
+def pesquisar_definicao(request):
+    termo = request.GET.get("termo", "").strip()
+    if not termo:
+        return JsonResponse({'erro': 'Termo de pesquisa não informado'}, status=400)
+
+    try:
+        definicao = chamar_api_gemini_para_definicao(termo)
+        definicao_html = markdown.markdown(definicao) 
+        return JsonResponse({'definicao': definicao_html}, json_dumps_params={'ensure_ascii': False})
+
+    except Exception as e:
+        return JsonResponse({'erro': 'Erro ao obter definição: ' + str(e)}, status=500)
+
+
+import json
+import requests
+from django.conf import settings
+
+def chamar_api_gemini_para_definicao(termo):
+    if not termo.strip():
+        return ""
+
+    prompt = f"Defina  o termo: '{termo}'"
+
+    url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent"
+    api_key = settings.GEMINI_API_KEY
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [
+                    {"text": prompt}
+                ]
+            }
+        ]
+    }
+
+    try:
+        response = requests.post(f"{url}?key={api_key}", headers=headers, data=json.dumps(payload))
+        response.raise_for_status()
+        resposta = response.json()
+
+        partes = resposta.get("candidates", [])[0].get("content", {}).get("parts", [])
+        if partes and "text" in partes[0]:
+            return partes[0]["text"].strip()
+
+        return "Não foi possível obter a definição."
+
+    except requests.exceptions.HTTPError as http_err:
+        return f"Erro HTTP: {http_err}"
+    except Exception as err:
+        return f"Erro ao obter definição: {str(err)}"
