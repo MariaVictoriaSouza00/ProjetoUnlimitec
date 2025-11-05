@@ -1,21 +1,22 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chamadas Públicas</title>
-  
-  <!-- Bootstrap & Font -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  
-  <style>
-    body {
+{% extends "base/estruturaBase.html" %}
+{% load static %}
+
+{% block estilos %}
+<style>
+   body {
       font-family: 'Roboto', sans-serif;
       background-color: #f8f9fa;
       margin: 0;
       padding: 0;
+      
     }
+
+    .navbar {
+  margin-bottom: 0 !important;
+}
+.content-wrapper {
+  margin-top: 50px !important; /* Remove o espaço branco */
+}
 
     .navbar-custom {
       background-color: #007bbf;
@@ -30,10 +31,6 @@
       background-color: #e9ecef;
       padding: 15px;
       text-align: center;
-    }
-
-    .content-wrapper {
-      margin-top: 60px;
     }
 
     .accordion-item {
@@ -58,64 +55,30 @@
       font-family: 'Roboto', sans-serif;
     }
 
-
     @media (min-width: 992px) {
       .sidebar {
         min-height: 100vh;
       }
     }
-  </style>
-</head>
-<body>
+</style>
+{% endblock %}
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand text-white" href="#">
-        <img src="https://i.ibb.co/wL23K4R/logo.png" alt="Logo" height="35">
-      </a>
-      <div class="collapse navbar-collapse justify-content-end">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="#">Ínicio</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">conheça a Plataforma</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Contate-nos</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+{% block conteudo %}
+<br><br>
 
-  <div class="container-fluid content-wrapper">
-    <div class="row">
-      <!-- Sidebar esquerda -->
-      <div class="col-lg-2 d-none d-lg-block sidebar">
-      </div>
+<div class="input-group mb-4">
+  <input type="text" id="barra-pesquisa" class="form-control" placeholder="Digite sua Pesquisa...">
+  <button class="btn btn-secondary" id="btn-limpar">Limpar</button>
+  <button class="btn btn-primary" id="btn-pesquisa">Pesquisa</button>
+  <button class="btn btn-primary" id="btn-links">Fomento</button>
+</div>
 
-      <!-- Conteúdo principal -->
-      <div class="col-12 col-lg-8">
-        <br>
-        <br>
+<div id="conteudo-dinamico" class="text-center p-4">
+  <img src="https://iili.io/Ka6cme2.md.png" alt="Imagem inicial" class="img-fluid" style="max-width: 300px;">
+</div>
 
-        <div class="input-group mb-4">
-          <input type="text" id="barra-pesquisa" class="form-control" placeholder="Digite sua Pesquisa...">
-          <button class="btn btn-secondary" id="btn-limpar">Limpar</button>
-          <button class="btn btn-primary" id="btn-pesquisa">Pesquisa</button>
-          <button class="btn btn-primary" id="btn-links">Fomento</button>
-        </div>
-
-        <div id="conteudo-dinamico">
-          <div class="accordion" id="lista-chamadas"></div>
-        </div>
-      </div>
-
-      <!-- Sidebar direita -->
-      <div class="col-lg-2 d-none d-lg-block sidebar">
-      </div>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script>
-    const conteudo = document.getElementById("conteudo-dinamico");
+<script>
+ const conteudo = document.getElementById("conteudo-dinamico");
     const barraPesquisa = document.getElementById("barra-pesquisa");
   
     function validarTermo() {
@@ -127,27 +90,29 @@
       return true;
     }
   
+    // Botão Fomento
     document.getElementById("btn-links").addEventListener("click", async () => {
       if (!validarTermo()) return;
-  
+
+      conteudo.innerHTML = '<div class="accordion" id="lista-chamadas"></div>';
       const lista = document.getElementById("lista-chamadas");
       lista.innerHTML = "🔄 Carregando chamadas...";
-  
+
       const termoPesquisa = barraPesquisa.value.toLowerCase().trim();
-  
+
       try {
         const response = await fetch("{% url 'buscar_titulos_ajax' %}?termo=" + encodeURIComponent(termoPesquisa), {
           headers: { "X-Requested-With": "XMLHttpRequest" }
         });
-  
+
         const data = await response.json();
         lista.innerHTML = "";
-  
+
         if (data.titulos && data.titulos.length > 0) {
           data.titulos.forEach((item, index) => {
             const accordionItem = document.createElement("div");
             accordionItem.className = "accordion-item";
-  
+
             accordionItem.innerHTML = `
               <h2 class="accordion-header" id="heading${index}">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
@@ -164,7 +129,6 @@
                 </div>
               </div>
             `;
-
             lista.appendChild(accordionItem);
           });
         } else {
@@ -175,14 +139,20 @@
       }
     });
   
+    // Botão Limpar
     document.getElementById("btn-limpar").addEventListener("click", () => {
-      // Limpa toda a área de conteúdo dinâmico, removendo tudo (lista e definição)
-      conteudo.innerHTML = '<div class="accordion" id="lista-chamadas"></div>';
-
-      // Limpa o valor da barra de pesquisa
+      conteudo.innerHTML = `
+        <div class="text-center p-4">
+          <img src="https://iili.io/Ka6cme2.md.png" 
+               alt="Imagem inicial" 
+               class="img-fluid" 
+               style="max-width: 300px;"/>
+        </div>
+      `;
       barraPesquisa.value = "";
     });
 
+    // Botão Pesquisa
     document.getElementById("btn-pesquisa").addEventListener("click", async () => {
       if (!validarTermo()) return;
 
@@ -193,29 +163,23 @@
           headers: { "X-Requested-With": "XMLHttpRequest" }
         });
 
-        // ✅ Recebe a resposta como JSON
         const data = await resp.json();
-
-        // ✅ Converte markdown para HTML
         const definicaoHTML = marked.parse(data.definicao);
 
-        // ✅ Insere no layout com card
         conteudo.innerHTML = `
-       <div class="card p-4 shadow-sm">
-          <h5 class="mb-3">
-            <span class="titulo-accordion">Definição:</span>
-          </h5>
-          <div class="text-justify">${definicaoHTML}</div>
-        </div>
-
+          <div class="card p-4 shadow-sm">
+            <h5 class="mb-3">
+              <span class="titulo-accordion">Definição:</span>
+            </h5>
+            <div class="text-justify">${definicaoHTML}</div>
+          </div>
         `;
       } catch (error) {
         conteudo.innerHTML = "<div class='text-danger'>Erro ao buscar definição.</div>";
       }
     });
-
-
   
+    // Filtro na digitação
     barraPesquisa.addEventListener("input", () => {
       const termo = barraPesquisa.value.toLowerCase();
       const itens = document.querySelectorAll(".accordion-item");
@@ -224,11 +188,5 @@
         item.style.display = texto.includes(termo) ? "" : "none";
       });
     });
-  </script>
-  
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-</body>
-</html>
+</script>
+{% endblock %}
