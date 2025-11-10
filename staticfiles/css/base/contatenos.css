@@ -1,0 +1,72 @@
+ 
+  /* Container apenas para o título */
+  .contato-header {
+    text-align: center;
+    background-color: #f1f1f1;
+    padding: 30px 0;
+    margin-top: 60px; /* espaço do topo */
+  }
+
+  .contato-header h2 {
+    color: #0f3146;
+    font-weight: 600;
+    font-size: 2rem;
+    margin: 20px 0;
+  }
+
+  .linha {
+    width: 96%;
+    max-width: 1200px;
+    height: 4px;
+    background-color: #fff;
+    opacity: 0.6;
+    margin: 0 auto;
+  }
+
+  /* Área de contato (fora do container cinza) */
+  .contato-body {
+    text-align: left;
+    max-width: 900px;
+    margin: 50px auto 0 auto;
+    padding: 0 20px;
+  }
+
+  .contato-body p {
+    font-size: 1.1rem;
+    color: #0f3146;
+  }
+
+  .contato-body strong {
+    font-weight: 700;
+  }
+
+  .contato-body a {
+    color: #265eb6;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .contato-body a:hover {
+    text-decoration: underline;
+  }
+
+  .social-icons {
+    margin-top: 30px;
+  }
+
+  .social-icons a img {
+    width: 42px;
+    margin-right: 15px;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .social-icons a img:hover {
+    transform: scale(1.13);
+  }
+  #formulario{
+    font-family: Lato;
+        color: rgba(33, 33, 33, 1);
+        font-size: 12pt;
+        line-height: 1.6;
+        margin-top: 15px;
+    }
