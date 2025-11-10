@@ -1,0 +1,48 @@
+/* garante que a navbar fixa tem altura previsível */
+.navbar.fixed-top,
+.navbar.fixed-top.navbar-custom,
+.navbar.navbar-custom.fixed-top {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height) !important;
+  line-height: var(--navbar-height) !important;
+  z-index: 1030; /* acima do conteúdo */
+}
+
+
+.navbar-custom {
+  background-color: #007bbf  !important;
+}
+
+.navbar-custom .nav-link {
+  color: white !important;
+  font-weight: 500;
+}
+
+/* caso exista um container vazio logo após a navbar */
+.navbar + .container,
+.navbar + .container-fluid,
+.navbar + header,
+.navbar + .content-wrapper {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* opcional: sombra sutil para diferenciar o menu */
+.navbar.fixed-top {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* --- Força altura da navbar e remove gaps --- */
+:root {
+  --navbar-height: 60px; /* ajuste aqui se necessário (60, 65, 70...) */
+}
+ 
+
+/* responsivo: se a navbar mudar de altura em telas pequenas, ajuste */
+@media (max-width: 991px) {
+  :root { --navbar-height: 56px; }
+}
+
