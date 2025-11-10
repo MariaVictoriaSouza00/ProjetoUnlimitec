@@ -1,1 +1,32 @@
-<h2>2</h2>
+{% extends "base/estruturaBase.html" %}
+{% load static %}
+
+{% block title %}UNLIMITEC - Contate-nos{% endblock %}
+
+{% block conteudo %}
+ <div id="formulario">
+   Ajude-nos a melhorar o site preenchendo este
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeOQC1A10TL4Rr9WBQos3DAxQKuxZOvCwOnE9deJCNdMIMPFg/viewform?usp=sharing&ouid=113643081803667711900" target="_blank">formulário</a>.
+ </div>
+
+<!-- Bloco cinza com o título -->
+<div class="contato-header">
+  <div class="linha"></div>
+  <h2>Contate-nos</h2>
+  <div class="linha"></div>
+</div>
+
+<!-- Conteúdo abaixo (fora do bloco cinza) -->
+<div class="contato-body">
+  <p><strong>Vamos conversar?</strong> <a href="mailto:contato@unlimi-tec.com">contato@unlimi-tec.com</a></p>
+
+  <div class="social-icons">
+    <a href="https://www.linkedin.com" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/3536/3536505.png" alt="LinkedIn">
+    </a>
+    <a href="https://www.instagram.com" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram">
+    </a>
+  </div>
+</div>
+{% endblock %}
