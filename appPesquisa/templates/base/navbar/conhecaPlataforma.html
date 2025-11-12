@@ -1,0 +1,42 @@
+{% extends "base/estruturaBase.html" %}
+{% load static %}
+
+{% block title %}UNLIMITEC - Conheça a Plataforma{% endblock %}
+
+{% block estilos %}
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet">
+<style>
+  .conhecaPlataforma-body p {
+    font-family: "Lato", Arial, sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 12pt !important;  
+    color: #073763 !important;
+    line-height: 1.7 !important;
+    letter-spacing: 0 !important;
+    text-align: justify !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+</style>
+{% endblock %}
+
+{% block conteudo %}
+<div id="formulario">
+  Ajude-nos a melhorar o site preenchendo este
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSeOQC1A10TL4Rr9WBQos3DAxQKuxZOvCwOnE9deJCNdMIMPFg/viewform?usp=sharing&ouid=113643081803667711900" target="_blank">formulário</a>.
+</div>
+
+<div class="conhecaPlataforma-header">
+  <div class="linha"></div>
+  <h2>Conheça a Plataforma</h2>
+  <div class="linha"></div>
+</div>
+
+<div class="conhecaPlataforma-body">
+  <div class="social-icons">
+    <p>
+      Boas ideias precisam de apoio para se tornarem realidade! Pensando nisso, esta Plataforma foi criada para facilitar o acesso a oportunidades de fomento, especialmente para quem busca inovar – independentemente do setor em que atua. Reunimos em um só lugar os principais editais abertos, divulgados por organizações governamentais, instituições privadas e demais organizações que apoiam o desenvolvimento de projetos inovadores. Com uma navegação simples e atualizações constantes, queremos ajudar empreendedores, gestores, pesquisadores, professores, estudantes, entusiastas e demais interessados a encontrar chamadas compatíveis com suas iniciativas, economizando tempo e aumentando as chances de sucesso. Nosso compromisso é contribuir com a transformação de ideias em soluções sustentáveis, ampliando a visibilidade e o aproveitamento das oportunidades disponíveis.
+    </p>
+  </div>
+</div>
+{% endblock %}
