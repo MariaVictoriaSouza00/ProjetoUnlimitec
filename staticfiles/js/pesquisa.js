@@ -64,12 +64,13 @@ document.getElementById("btn-links").addEventListener("click", async () => {
 
 document.getElementById("btn-limpar").addEventListener("click", () => {
     conteudo.innerHTML = `
-        <div class="text-center p-4">
-            <img src="https://iili.io/Ka6cme2.md.png"
-                 alt="Imagem inicial"
-                 class="img-fluid"
-                 style="max-width: 300px;"/>
+       <div id="conteudo-dinamico" class="text-center p-4">
+            <img src="https://i.ibb.co/FbcqrSxB/image-removebg-preview-38.png" 
+                alt="Imagem inicial" 
+                class="img-fluid" 
+                style="max-width: 100%; width: 100%; height: auto;">
         </div>
+
     `;
     barraPesquisa.value = "";
 });

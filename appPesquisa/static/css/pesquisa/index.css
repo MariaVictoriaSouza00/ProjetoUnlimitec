@@ -1,0 +1,106 @@
+#formulario {
+  font-family: inherit;
+  color: rgba(33, 33, 33, 1);
+  font-size: 11pt;
+  line-height: 1.6;
+  margin-top: 15px;
+}
+
+.faixa-boas-vindas {
+    width: 100%;
+    background-color: #f1f1f1; /* cinza claro igual o modelo */
+    text-align: center;
+    padding: 25px 10px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #003366; /* azul igual à identidade visual */
+}
+
+.input-container {
+    display: flex;
+    align-items: center;   /* garante alinhamento vertical */
+    gap: 1px;             /* espaço entre a imagem e o input */
+}
+
+.icone-pesquisa {
+    width: 90px;           /* tamanho da imagem — ajuste se quiser mais */
+    height: auto;
+    margin-bottom: 0;      /* evita ficar deslocada para baixo */
+    display: block;
+     margin-top: -25px;
+}
+
+
+
+
+/* Botões ficam com largura mínima boa */
+.input-group .btn,
+.dropdown-toggle {
+    min-width: 120px;
+}
+
+#dropdownFomento {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+
+     border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+#barra-pesquisa{
+      border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+      border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+#btn-pesquisa,
+#dropdownFomento {
+    background-color: #87be50 !important;
+    border-color: #87be50 !important;
+    color: #fff !important;
+}
+
+.dropdown-menu .dropdown-item {
+    color: #fff !important;
+    background-color: #87be50 !important;
+    --bs-dropdown-bg: #87be50 !important;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #6ea53d !important; /* tom mais escuro no hover */
+}
+#btn-limpar {
+    background-color: #999999 !important;
+    border-color: #999999 !important;
+    color: #fff !important;
+}
+
+
+/* QUANDO A TELA FOR PEQUENA (CELULAR) */
+@media (max-width: 768px) {
+
+    /* Esconde a imagem no celular */
+    .icone-pesquisa {
+        display: none;
+    }
+
+    /* Coloca os elementos em coluna */
+    .input-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .input-group input {
+        width: 100%;
+    }
+
+    .input-group .btn,
+    .dropdown {
+        width: 100%;
+    }
+
+    .dropdown-toggle {
+        width: 100%;
+    }
+}

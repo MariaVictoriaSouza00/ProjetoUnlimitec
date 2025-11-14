@@ -3,18 +3,49 @@
 
 
 {% block conteudo %}
+<div id="formulario">
+  Ajude-nos a melhorar o site preenchendo este
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSeOQC1A10TL4Rr9WBQos3DAxQKuxZOvCwOnE9deJCNdMIMPFg/viewform?usp=sharing&ouid=113643081803667711900" target="_blank">formulário</a>.
+</div>
 <br><br>
 
-<div class="input-group mb-4">
-  <input type="text" id="barra-pesquisa" class="form-control" placeholder="Digite sua Pesquisa...">
-  <button class="btn btn-secondary" id="btn-limpar">Limpar</button>
-  <button class="btn btn-primary" id="btn-pesquisa">Pesquisa</button>
-  <button class="btn btn-primary" id="btn-links">Fomento</button>
+<div class="faixa-boas-vindas">
+    Olá! O que podemos fazer por você hoje?
+</div>
+<br>
+<div class="input-container">
+    <img src="https://i.ibb.co/DPCqGVGM/image-removebg-preview-37.png" 
+         alt="Logo" class="icone-pesquisa">
+
+    <div class="input-group mb-4 flex-wrap">
+
+        <input type="text" id="barra-pesquisa" class="form-control" placeholder="Digite sua Pesquisa...">
+
+        <button class="btn btn-secondary mt-2 mt-md-0" id="btn-limpar">Limpar</button>
+        <button class="btn btn-primary mt-2 mt-md-0" id="btn-pesquisa">Pesquisa</button>
+
+        <!-- DROPDOWN FOMENTO -->
+       <div class="dropdown mt-2 mt-md-0">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownFomento" data-bs-toggle="dropdown">
+              Fomento
+          </button>
+          <ul class="dropdown-menu">
+              <li><a id="btn-links" class="dropdown-item" href="#">Pesquisar Editais</a></li>
+          </ul>
+      </div>
+
+    </div>
 </div>
 
+
+
 <div id="conteudo-dinamico" class="text-center p-4">
-  <img src="https://iili.io/Ka6cme2.md.png" alt="Imagem inicial" class="img-fluid" style="max-width: 300px;">
+  <img src="https://i.ibb.co/FbcqrSxB/image-removebg-preview-38.png" 
+       alt="Imagem inicial" 
+       class="img-fluid" 
+       style="max-width: 100%; width: 100%; height: auto;">
 </div>
+
 {% endblock %}
 
 {% block scripts %}
