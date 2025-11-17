@@ -61,6 +61,9 @@ def conhecaPlataforma(request):
 def contatenos(request):
     return render(request, 'base/navbar/contatenos.html')
 
+def pagina_definicao(request):
+    return render(request, "pesquisa/definicao.html")
+
 # ========================== Sinonímia ==========================
 def obter_sinonimos_api(termo):
     url = f"https://api.datamuse.com/words?rel_syn={termo}&max=3"
@@ -119,22 +122,22 @@ def pesquisar_definicao(request):
 import json
 import requests
 from django.conf import settings
-
 def chamar_api_gemini_para_definicao(termo):
     if not termo.strip():
         return ""
 
-    prompt = f"Defina  o termo: '{termo}'"
+    prompt = f"Defina o termo: '{termo}'"
 
-    url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent"
+    url = "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent"
     api_key = settings.GEMINI_API_KEY
+
     headers = {
         "Content-Type": "application/json"
     }
+
     payload = {
         "contents": [
             {
-                "role": "user",
                 "parts": [
                     {"text": prompt}
                 ]
@@ -143,10 +146,17 @@ def chamar_api_gemini_para_definicao(termo):
     }
 
     try:
-        response = requests.post(f"{url}?key={api_key}", headers=headers, data=json.dumps(payload))
+        # Importante: o JSON deve ir como json=payload (não data=)
+        response = requests.post(
+            f"{url}?key={api_key}",
+            headers=headers,
+            json=payload
+        )
+
         response.raise_for_status()
         resposta = response.json()
 
+        # Pega o texto retornado pelo modelo
         partes = resposta.get("candidates", [])[0].get("content", {}).get("parts", [])
         if partes and "text" in partes[0]:
             return partes[0]["text"].strip()
