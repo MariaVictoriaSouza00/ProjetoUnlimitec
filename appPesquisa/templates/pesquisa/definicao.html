@@ -1,0 +1,70 @@
+{% extends "base/estruturaBase.html" %}
+{% load static %}
+
+{% block conteudo %}
+<div class="container py-4">
+    <a href="{% url 'home' %}" class="btn btn-link mb-3">&larr; Voltar</a>
+
+    <div class="card p-4 shadow-sm">
+        <h2 class="mb-3">Definição</h2>
+
+        <div id="conteudo-definicao" class="caixa-definicao">
+            <div class="text-muted">Carregando definição...</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<style>
+.caixa-definicao {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 120px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-top: 15px;
+    white-space: pre-wrap;
+}
+</style>
+
+<script>
+    const URL_DEFINICAO_API = "{% url 'definicao' %}";
+    const params = new URLSearchParams(window.location.search);
+    const termo = params.get('termo');
+
+    (async function carregarDefinicao() {
+        if (!termo) {
+            document.getElementById('conteudo-definicao').innerHTML =
+                "<div class='text-warning'>Nenhum termo informado.</div>";
+            return;
+        }
+
+        try {
+            const resp = await fetch(URL_DEFINICAO_API + "?termo=" + encodeURIComponent(termo), {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            const data = await resp.json();
+            
+            const definicao = data.definicao || "Definição não encontrada.";
+
+            const definicaoHTML = (typeof marked !== 'undefined')
+                ? marked.parse(definicao)
+                : definicao;
+
+            document.getElementById('conteudo-definicao').innerHTML = `
+                <div>${definicaoHTML}</div>
+            `;
+        } catch (err) {
+            document.getElementById('conteudo-definicao').innerHTML =
+                "<div class='text-danger'>Erro ao carregar a definição.</div>";
+        }
+    })();
+</script>
+{% endblock %}
