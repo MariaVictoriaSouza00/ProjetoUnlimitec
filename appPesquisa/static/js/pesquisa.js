@@ -1,7 +1,9 @@
-
 const conteudo = document.getElementById("conteudo-dinamico");
 const barraPesquisa = document.getElementById("barra-pesquisa");
 
+// ---------------------
+//  VALIDAÇÃO
+// ---------------------
 function validarTermo() {
     const termo = barraPesquisa.value.trim();
     if (!termo) {
@@ -11,6 +13,9 @@ function validarTermo() {
     return true;
 }
 
+// ---------------------
+//  BOTÃO — LISTA DE EDITAIS
+// ---------------------
 document.getElementById("btn-links").addEventListener("click", async () => {
     if (!validarTermo()) return;
 
@@ -62,19 +67,24 @@ document.getElementById("btn-links").addEventListener("click", async () => {
     }
 });
 
+// ---------------------
+//  BOTÃO — LIMPAR
+// ---------------------
 document.getElementById("btn-limpar").addEventListener("click", () => {
     conteudo.innerHTML = `
-       <div id="conteudo-dinamico" class="text-center p-4">
+        <div class="text-center p-4">
             <img src="https://i.ibb.co/FbcqrSxB/image-removebg-preview-38.png" 
                 alt="Imagem inicial" 
                 class="img-fluid" 
                 style="max-width: 100%; width: 100%; height: auto;">
         </div>
-
     `;
     barraPesquisa.value = "";
 });
 
+// ---------------------
+//  BOTÃO — DEFINIÇÃO
+// ---------------------
 document.getElementById("btn-pesquisa").addEventListener("click", async () => {
     if (!validarTermo()) return;
 
@@ -101,6 +111,9 @@ document.getElementById("btn-pesquisa").addEventListener("click", async () => {
     }
 });
 
+// ---------------------
+//  FILTRO AO DIGITAR
+// ---------------------
 barraPesquisa.addEventListener("input", () => {
     const termo = barraPesquisa.value.toLowerCase();
     const itens = document.querySelectorAll(".accordion-item");
