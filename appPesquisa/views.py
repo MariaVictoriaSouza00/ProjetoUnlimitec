@@ -10,7 +10,6 @@ import markdown
 # Scrapers
 from appPesquisa.scrapers.finep import obter_titulos_finep
 from appPesquisa.scrapers.cnpq import obter_titulos_cnpq
-from appPesquisa.scrapers.fundect import obter_titulos_fundect
 from appPesquisa.scrapers.fapergs import obter_titulos_fapergs
 
 # ========================== Scrapers ==========================
@@ -28,7 +27,7 @@ def obter_todos_titulos():
         except Exception as e:
             print(f"Erro no scraper {scraper_func.__name__}: {e}")
 
-    scrapers = [obter_titulos_finep, obter_titulos_cnpq, obter_titulos_fundect,obter_titulos_fapergs]
+    scrapers = [obter_titulos_finep, obter_titulos_cnpq,obter_titulos_fapergs]
     threads = []
 
     for scraper in scrapers:
