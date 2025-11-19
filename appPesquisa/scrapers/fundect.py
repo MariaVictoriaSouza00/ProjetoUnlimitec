@@ -4,7 +4,17 @@ from bs4 import BeautifulSoup
 def obter_titulos_fundect():
     dados = []
     url_base = "https://www.fundect.ms.gov.br"
-    res = requests.get(f"{url_base}/category/chamadas-abertas/")
+
+    try:
+        res = requests.get(
+            f"{url_base}/category/chamadas-abertas/",
+            timeout=15,
+            verify=False  # evita handshake error
+        )
+    except Exception as e:
+        print("Erro ao acessar página principal da FUNDECT:", e)
+        return []  # ← nunca deixe retornar None
+
     soup = BeautifulSoup(res.text, "html.parser")
     cards = soup.select("div.card-body")
 
@@ -20,7 +30,11 @@ def obter_titulos_fundect():
                 link = url_base + link
 
             try:
-                detalhe_res = requests.get(link)
+                detalhe_res = requests.get(
+                    link,
+                    timeout=15,
+                    verify=False
+                )
                 detalhe_soup = BeautifulSoup(detalhe_res.text, "html.parser")
 
                 content_div = detalhe_soup.find("div", id="content")
@@ -41,4 +55,6 @@ def obter_titulos_fundect():
 
             except Exception as e:
                 print(f"Erro ao acessar detalhes: {link} - {e}")
+                continue
+
     return dados
