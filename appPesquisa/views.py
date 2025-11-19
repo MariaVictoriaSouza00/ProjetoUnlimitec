@@ -10,6 +10,7 @@ import markdown
 # Scrapers
 from appPesquisa.scrapers.finep import obter_titulos_finep
 from appPesquisa.scrapers.cnpq import obter_titulos_cnpq
+#from appPesquisa.scrapers.fundect import obter_titulos_fundect
 from appPesquisa.scrapers.fapergs import obter_titulos_fapergs
 
 # ========================== Scrapers ==========================
@@ -19,26 +20,21 @@ def health_check(request):
 
 def obter_todos_titulos():
     resultados = []
-
-    def run_scraper(scraper_func):
-        try:
-            titulos = scraper_func()
-            resultados.extend(titulos)
-        except Exception as e:
-            print(f"Erro no scraper {scraper_func.__name__}: {e}")
-
-    scrapers = [obter_titulos_finep, obter_titulos_cnpq,obter_titulos_fapergs]
-    threads = []
+    scrapers = [
+        obter_titulos_finep,
+        obter_titulos_cnpq,
+        obter_titulos_fapergs
+    ]
 
     for scraper in scrapers:
-        thread = threading.Thread(target=run_scraper, args=(scraper,))
-        thread.start()
-        threads.append(thread)
-
-    for thread in threads:
-        thread.join()
+        try:
+            titulos = scraper()
+            resultados.extend(titulos)
+        except Exception as e:
+            print(f"Erro no scraper {scraper.__name__}: {e}")
 
     return resultados
+
 
 # ========================== Views ==========================
 def tela_index(request):
