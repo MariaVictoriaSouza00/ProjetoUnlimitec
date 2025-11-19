@@ -27,14 +27,16 @@ def obter_todos_titulos():
     ]
 
     for scraper in scrapers:
+        print(f"Iniciando scraper: {scraper.__name__}")
         try:
             titulos = scraper()
+            print(f"OK: {scraper.__name__} → {len(titulos)} resultados")
             resultados.extend(titulos)
         except Exception as e:
-            print(f"Erro no scraper {scraper.__name__}: {e}")
+            print(f"ERRO: {scraper.__name__}: {e}")
 
+    print("FINALIZADO TODOS OS SCRAPERS")
     return resultados
-
 
 # ========================== Views ==========================
 def tela_index(request):
