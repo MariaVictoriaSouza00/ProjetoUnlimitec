@@ -22,8 +22,8 @@ def obter_todos_titulos():
     resultados = []
     scrapers = [
         obter_titulos_finep,
-        obter_titulos_cnpq,
-        obter_titulos_fapergs
+        obter_titulos_cnpq
+       # obter_titulos_fapergs
     ]
 
     for scraper in scrapers:
