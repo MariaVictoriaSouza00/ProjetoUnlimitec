@@ -11,7 +11,7 @@ import markdown
 from appPesquisa.scrapers.finep import obter_titulos_finep
 from appPesquisa.scrapers.cnpq import obter_titulos_cnpq
 #from appPesquisa.scrapers.fundect import obter_titulos_fundect
-from appPesquisa.scrapers.fapergs import obter_titulos_fapergs
+#from appPesquisa.scrapers.fapergs import obter_titulos_fapergs
 
 # ========================== Scrapers ==========================
 # View para verificar a saúde da aplicação
