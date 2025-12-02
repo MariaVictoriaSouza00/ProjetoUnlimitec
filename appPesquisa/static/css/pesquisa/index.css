@@ -54,10 +54,17 @@
     border-bottom-left-radius: 0 !important;
 }
 #btn-pesquisa,
+#btn-links,
 #dropdownFomento {
     background-color: #87be50 !important;
     border-color: #87be50 !important;
     color: #fff !important;
+}
+#btn-links{
+     border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+      border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
 }
 
 .dropdown-menu .dropdown-item {
