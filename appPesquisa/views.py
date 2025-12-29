@@ -4,7 +4,8 @@ import threading
 import requests
 from django.conf import settings
 from functools import lru_cache
-from appPesquisa.utils.resumo import resumir_texto_com_gemini  # <- usando a função corretamente
+from appPesquisa.utils.resumo import resumir_texto_com_gemini
+  # <- usando a função corretamente
 import markdown
 
 # Scrapers
@@ -74,32 +75,54 @@ def obter_sinonimos_api(termo):
     return [termo] + sinonimos
 
 # ========================== Busca AJAX ==========================
+
+from django.http import JsonResponse
+from appPesquisa.scrapers.finep import obter_titulos_finep
+from appPesquisa.scrapers.cnpq import obter_titulos_cnpq
+
+MAX_RESUMOS_COM_GEMINI = 3  # 🔥 limite duro
+
+
 def buscar_titulos_ajax(request):
     termo_pesquisa = request.GET.get("termo", "").lower()
 
-    if request.method == "GET" and request.headers.get("x-requested-with") == "XMLHttpRequest":
-        titulos = obter_todos_titulos()
+    if request.method != "GET":
+        return JsonResponse({"erro": "Método inválido"}, status=405)
+
+    if request.headers.get("x-requested-with") != "XMLHttpRequest":
+        return JsonResponse({"erro": "Requisição inválida"}, status=400)
+
+    # 1️⃣ Buscar títulos
+    titulos = []
+    titulos.extend(obter_titulos_finep())
+    titulos.extend(obter_titulos_cnpq())
+
+    # 2️⃣ Filtrar por termo + sinônimos
+    if termo_pesquisa:
         sinonimos = obter_sinonimos_api(termo_pesquisa)
 
-        if termo_pesquisa:
-            titulos = [
-                titulo for titulo in titulos
-                if any(
-                    termo in titulo.get('titulo', '').lower() or termo in titulo.get('resumo', '').lower()
-                    for termo in sinonimos
-                )
-            ]
+        titulos = [
+            t for t in titulos
+            if any(
+                termo in t.get("titulo", "").lower()
+                or termo in t.get("resumo", "").lower()
+                for termo in sinonimos
+            )
+        ]
 
+    # 3️⃣ Resumir SOMENTE alguns (controlado)
+    resumidos = 0
+    for titulo in titulos:
+        if resumidos >= MAX_RESUMOS_COM_GEMINI:
+            break
 
-        # Aplica a função Gemini para resumir
-        for titulo in titulos:
-            resumo_original = titulo.get("resumo", "")
-            if resumo_original:
-                titulo["resumo"] = resumir_texto_com_gemini(resumo_original)
+        resumo = titulo.get("resumo", "")
+        if resumo:
+            titulo["resumo"] = resumir_texto_com_gemini(resumo)
+            resumidos += 1
 
-        return JsonResponse({'titulos': titulos})
+    return JsonResponse({"titulos": titulos})
 
-    return JsonResponse({'erro': 'Requisição inválida'}, status=400)
 
 
 def pesquisar_definicao(request):
@@ -115,22 +138,20 @@ def pesquisar_definicao(request):
     except Exception as e:
         return JsonResponse({'erro': 'Erro ao obter definição: ' + str(e)}, status=500)
 
-
-import json
+from functools import lru_cache
+import time
 import requests
 from django.conf import settings
-def chamar_api_gemini_para_definicao(termo):
-    if not termo.strip():
+
+@lru_cache(maxsize=200)
+def chamar_api_gemini_para_definicao(termo: str) -> str:
+    termo = termo.strip().lower()
+    if not termo:
         return ""
 
-    prompt = f"Defina o termo: '{termo}'"
+    prompt = f"Defina o termo '{termo}' de forma clara e objetiva."
 
     url = "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent"
-    api_key = settings.GEMINI_API_KEY
-
-    headers = {
-        "Content-Type": "application/json"
-    }
 
     payload = {
         "contents": [
@@ -143,24 +164,20 @@ def chamar_api_gemini_para_definicao(termo):
     }
 
     try:
-        # Importante: o JSON deve ir como json=payload (não data=)
         response = requests.post(
-            f"{url}?key={api_key}",
-            headers=headers,
-            json=payload
+            f"{url}?key={settings.GEMINI_API_KEY}",
+            json=payload,
+            headers={"Content-Type": "application/json"},
+            timeout=15
         )
 
+        if response.status_code == 429:
+            time.sleep(2)
+            return "Definição temporariamente indisponível. Tente novamente em instantes."
+
         response.raise_for_status()
-        resposta = response.json()
+        data = response.json()
+        return data["candidates"][0]["content"]["parts"][0]["text"].strip()
 
-        # Pega o texto retornado pelo modelo
-        partes = resposta.get("candidates", [])[0].get("content", {}).get("parts", [])
-        if partes and "text" in partes[0]:
-            return partes[0]["text"].strip()
-
-        return "Não foi possível obter a definição."
-
-    except requests.exceptions.HTTPError as http_err:
-        return f"Erro HTTP: {http_err}"
-    except Exception as err:
-        return f"Erro ao obter definição: {str(err)}"
+    except Exception as e:
+        return f"Erro ao obter definição."
