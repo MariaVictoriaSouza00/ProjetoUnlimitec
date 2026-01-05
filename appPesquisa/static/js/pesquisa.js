@@ -46,7 +46,7 @@ document.getElementById("btn-links").addEventListener("click", async () => {
                             ${item.titulo}
                         </button>
                     </h2>
-                    <div id="collapse${index}" class="accordion-collapse collapse"
+                    <div id="collapse${index}" class="accordion-body text-start"
                         data-bs-parent="#lista-chamadas">
                         <div class="accordion-body">
                             <p><strong>Resumo:</strong> ${item.resumo || 'Não disponível'}</p>
@@ -90,10 +90,14 @@ document.getElementById("btn-pesquisa").addEventListener("click", async () => {
 
     const termo = barraPesquisa.value.trim();
 
+    // 🔄 Mostra carregando imediatamente
+    conteudo.innerHTML ="🔄 Carregando ...";
+
     try {
-        const resp = await fetch(URL_DEFINICAO + "?termo=" + encodeURIComponent(termo), {
-            headers: { "X-Requested-With": "XMLHttpRequest" }
-        });
+        const resp = await fetch(
+            URL_DEFINICAO + "?termo=" + encodeURIComponent(termo),
+            { headers: { "X-Requested-With": "XMLHttpRequest" } }
+        );
 
         const data = await resp.json();
         const definicaoHTML = marked.parse(data.definicao);
@@ -107,9 +111,11 @@ document.getElementById("btn-pesquisa").addEventListener("click", async () => {
             </div>
         `;
     } catch (error) {
-        conteudo.innerHTML = "<div class='text-danger'>Erro ao buscar definição.</div>";
+        conteudo.innerHTML =
+            "<div class='text-danger'>Erro ao buscar definição.</div>";
     }
 });
+
 
 // ---------------------
 //  FILTRO AO DIGITAR

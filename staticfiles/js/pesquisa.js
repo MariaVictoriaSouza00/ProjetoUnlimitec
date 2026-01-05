@@ -1,7 +1,9 @@
-
 const conteudo = document.getElementById("conteudo-dinamico");
 const barraPesquisa = document.getElementById("barra-pesquisa");
 
+// ---------------------
+//  VALIDAÇÃO
+// ---------------------
 function validarTermo() {
     const termo = barraPesquisa.value.trim();
     if (!termo) {
@@ -11,6 +13,9 @@ function validarTermo() {
     return true;
 }
 
+// ---------------------
+//  BOTÃO — LISTA DE EDITAIS
+// ---------------------
 document.getElementById("btn-links").addEventListener("click", async () => {
     if (!validarTermo()) return;
 
@@ -41,7 +46,7 @@ document.getElementById("btn-links").addEventListener("click", async () => {
                             ${item.titulo}
                         </button>
                     </h2>
-                    <div id="collapse${index}" class="accordion-collapse collapse"
+                    <div id="collapse${index}" class="accordion-body text-start"
                         data-bs-parent="#lista-chamadas">
                         <div class="accordion-body">
                             <p><strong>Resumo:</strong> ${item.resumo || 'Não disponível'}</p>
@@ -62,28 +67,37 @@ document.getElementById("btn-links").addEventListener("click", async () => {
     }
 });
 
+// ---------------------
+//  BOTÃO — LIMPAR
+// ---------------------
 document.getElementById("btn-limpar").addEventListener("click", () => {
     conteudo.innerHTML = `
-       <div id="conteudo-dinamico" class="text-center p-4">
-            <img src="https://i.ibb.co/FbcqrSxB/image-removebg-preview-38.png" 
+        <div class="text-center p-4">
+            <img src="https://i.ibb.co/Y452ggsR/image.png" 
                 alt="Imagem inicial" 
                 class="img-fluid" 
                 style="max-width: 100%; width: 100%; height: auto;">
         </div>
-
     `;
     barraPesquisa.value = "";
 });
 
+// ---------------------
+//  BOTÃO — DEFINIÇÃO
+// ---------------------
 document.getElementById("btn-pesquisa").addEventListener("click", async () => {
     if (!validarTermo()) return;
 
     const termo = barraPesquisa.value.trim();
 
+    // 🔄 Mostra carregando imediatamente
+    conteudo.innerHTML ="🔄 Carregando ...";
+
     try {
-        const resp = await fetch(URL_DEFINICAO + "?termo=" + encodeURIComponent(termo), {
-            headers: { "X-Requested-With": "XMLHttpRequest" }
-        });
+        const resp = await fetch(
+            URL_DEFINICAO + "?termo=" + encodeURIComponent(termo),
+            { headers: { "X-Requested-With": "XMLHttpRequest" } }
+        );
 
         const data = await resp.json();
         const definicaoHTML = marked.parse(data.definicao);
@@ -97,10 +111,15 @@ document.getElementById("btn-pesquisa").addEventListener("click", async () => {
             </div>
         `;
     } catch (error) {
-        conteudo.innerHTML = "<div class='text-danger'>Erro ao buscar definição.</div>";
+        conteudo.innerHTML =
+            "<div class='text-danger'>Erro ao buscar definição.</div>";
     }
 });
 
+
+// ---------------------
+//  FILTRO AO DIGITAR
+// ---------------------
 barraPesquisa.addEventListener("input", () => {
     const termo = barraPesquisa.value.toLowerCase();
     const itens = document.querySelectorAll(".accordion-item");
