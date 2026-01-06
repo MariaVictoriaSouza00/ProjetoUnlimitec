@@ -103,12 +103,15 @@ document.getElementById("btn-pesquisa").addEventListener("click", async () => {
         const definicaoHTML = marked.parse(data.definicao);
 
         conteudo.innerHTML = `
-            <div class="card p-4 shadow-sm">
-                <h5 class="mb-3">
+           <div class="card p-4 shadow-sm">
+                <h5 class="mb-3 text-start">
                     <span class="titulo-accordion">Definição:</span>
                 </h5>
-                <div class="text-justify">${definicaoHTML}</div>
+                <div class="text-start">
+                    ${definicaoHTML}
+                </div>
             </div>
+
         `;
     } catch (error) {
         conteudo.innerHTML =
