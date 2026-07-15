@@ -11,8 +11,9 @@ import markdown
 # Scrapers
 from appPesquisa.scrapers.finep import obter_titulos_finep
 from appPesquisa.scrapers.cnpq import obter_titulos_cnpq
-#from appPesquisa.scrapers.fundect import obter_titulos_fundect
-#from appPesquisa.scrapers.fapergs import obter_titulos_fapergs
+from appPesquisa.scrapers.fundect import obter_titulos_fundect
+from appPesquisa.scrapers.fapergs import obter_titulos_fapergs
+from appPesquisa.scrapers.fapesp import obter_titulos_fapesp
 
 # ========================== Scrapers ==========================
 # View para verificar a saúde da aplicação
@@ -96,6 +97,7 @@ def buscar_titulos_ajax(request):
     titulos = []
     titulos.extend(obter_titulos_finep())
     titulos.extend(obter_titulos_cnpq())
+    titulos.extend(obter_titulos_fapesp())
 
     # 2️⃣ Filtrar por termo + sinônimos
     if termo_pesquisa:
