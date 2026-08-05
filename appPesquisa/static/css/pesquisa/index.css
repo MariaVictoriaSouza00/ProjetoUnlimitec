@@ -83,31 +83,23 @@
 }
 
 
-/* QUANDO A TELA FOR PEQUENA (CELULAR) */
 @media (max-width: 768px) {
 
-    /* Esconde a imagem no celular */
-    .icone-pesquisa {
-        display: none;
-    }
-
-    /* Coloca os elementos em coluna */
     .input-group {
-        flex-direction: column;
-        width: 100%;
-        gap: 10px;
+        display: flex !important;
+        flex-wrap: wrap !important;
     }
 
-    .input-group input {
-        width: 100%;
+    .input-group > input.form-control {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 10px;
     }
 
-    .input-group .btn,
-    .dropdown {
-        width: 100%;
-    }
-
-    .dropdown-toggle {
-        width: 100%;
+    .input-group > button {
+        flex: 1 0 100% !important;
+        width: 100% !important;
+        margin-bottom: 10px;
     }
 }
