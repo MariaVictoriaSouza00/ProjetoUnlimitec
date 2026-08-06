@@ -46,3 +46,8 @@
   :root { --navbar-height: 56px; }
 }
 
+@media (max-width: 768px) {
+  img, svg {
+      display: none !important;
+  }
+}
