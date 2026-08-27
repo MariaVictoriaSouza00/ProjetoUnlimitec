@@ -1,59 +1,214 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
+
+URL_BASE = "https://www.finep.gov.br"
+URL_OPORTUNIDADES = f"{URL_BASE}/oportunidades"
+
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/151.0.0.0 Safari/537.36"
+    )
+}
+
 
 def obter_titulos_finep():
-    dados = []
-    url_base = "http://www.finep.gov.br"
-    url = f"{url_base}/chamadas-publicas/chamadaspublicas?pchave=&situacao=aberta&d1=01-01-2025"
 
-    res = requests.get(url)
-    soup = BeautifulSoup(res.text, "html.parser")
-    elementos = soup.select("div.item h3 a")
+    resultados = []
 
-    for el in elementos:
-        titulo = el.get_text(strip=True)
-        link = el["href"].strip()
-        if not link.startswith("http"):
-            link = url_base + link
+    session = requests.Session()
+    session.headers.update(HEADERS)
 
-        # acessa página individual
-        try:
-            detalhe_res = requests.get(link)
-            detalhe_soup = BeautifulSoup(detalhe_res.text, "html.parser")
-            campos = detalhe_soup.select_one("div.item_fields")
+    try:
 
-            descricao = ""
-            prazo_envio = ""
-            publico_alvo = ""
-            data_publicacao = ""
+        # =====================================================
+        # 1. ABRE A PÁGINA PRINCIPAL
+        # =====================================================
 
-            desc = campos.select_one("div.group.desc .text") if campos else None
-            if desc:
-                descricao = desc.get_text(separator="\n", strip=True)
+        response = session.get(
+            URL_OPORTUNIDADES,
+            timeout=30
+        )
 
-            for grupo in campos.select("div.group") if campos else []:
-                titulo_campo = grupo.select_one("div.tit")
-                valor_campo = grupo.select_one("div.text")
-                if titulo_campo and valor_campo:
-                    chave = titulo_campo.get_text(strip=True).lower()
-                    valor = valor_campo.get_text(" ", strip=True)
+        response.raise_for_status()
 
-                    if "prazo para envio" in chave:
-                        prazo_envio = valor
-                    elif "público-alvo" in chave:
-                        publico_alvo = valor
-                    elif "data de publicação" in chave:
-                        data_publicacao = valor
+        soup = BeautifulSoup(
+            response.text,
+            "html.parser"
+        )
 
-            dados.append({
+        # =====================================================
+        # 2. LOCALIZA "BUSCAR POR OPORTUNIDADES"
+        # =====================================================
+
+        link_busca = None
+
+        for a in soup.find_all("a", href=True):
+
+            texto = a.get_text(
+                " ",
+                strip=True
+            ).lower()
+
+            if "buscar por oportunidades" in texto:
+
+                link_busca = urljoin(
+                    URL_OPORTUNIDADES,
+                    a["href"]
+                )
+
+                break
+
+        if not link_busca:
+
+            print(
+                "[FINEP] Link 'Buscar por oportunidades' não encontrado."
+            )
+
+            return resultados
+
+        print(
+            f"[FINEP] Página de busca: {link_busca}"
+        )
+
+        # =====================================================
+        # 3. ABRE A PÁGINA DE BUSCA
+        # =====================================================
+
+        response = session.get(
+            link_busca,
+            timeout=30
+        )
+
+        response.raise_for_status()
+
+        soup = BeautifulSoup(
+            response.text,
+            "html.parser"
+        )
+
+        # =====================================================
+        # 4. LOCALIZA OS CARDS
+        # =====================================================
+
+        cards = soup.select(
+            "div.produto-card"
+        )
+
+        print(
+            f"[FINEP] Cards encontrados nesta página: {len(cards)}"
+        )
+
+        # =====================================================
+        # 5. EXTRAI TÍTULO E LINK
+        # =====================================================
+
+        for card in cards:
+
+            # -------------------------------------------------
+            # TÍTULO
+            # -------------------------------------------------
+
+            titulo_elemento = card.select_one(
+                "h2.card-title"
+            )
+
+            if not titulo_elemento:
+                continue
+
+            titulo = titulo_elemento.get_text(
+                " ",
+                strip=True
+            )
+
+            if not titulo:
+                continue
+
+            # -------------------------------------------------
+            # LINK
+            # -------------------------------------------------
+
+            link_elemento = card.select_one(
+                "a[href]"
+            )
+
+            if link_elemento:
+
+                href = link_elemento.get(
+                    "href",
+                    ""
+                ).strip()
+
+                link = urljoin(
+                    link_busca,
+                    href
+                )
+
+            else:
+
+                link = None
+
+            # -------------------------------------------------
+            # ADICIONA
+            # -------------------------------------------------
+
+            resultados.append({
                 "titulo": titulo,
-                "link": link,
-                "resumo": descricao,
-                "prazo_envio": prazo_envio,
-                "publico_alvo": publico_alvo,
-                "data_publicacao": data_publicacao
+                "link": link
             })
 
-        except Exception as e:
-            print(f"Erro ao acessar detalhes: {link} - {e}")
-    return dados
+        # =====================================================
+        # 6. REMOVE DUPLICADOS
+        # =====================================================
+
+        resultados_unicos = []
+
+        links_processados = set()
+
+        for item in resultados:
+
+            chave = item["link"] or item["titulo"]
+
+            if chave in links_processados:
+                continue
+
+            links_processados.add(chave)
+
+            resultados_unicos.append(item)
+
+        resultados = resultados_unicos
+
+        # =====================================================
+        # 7. MOSTRA RESULTADOS
+        # =====================================================
+       
+        print(
+            f"[FINEP] Total encontrado: {len(resultados)}"
+        )
+
+        for item in resultados:
+
+            print(
+                f"- {item['titulo']}"
+            )
+
+            print(
+                f"  {item['link']}"
+            )
+
+    except requests.RequestException as erro:
+
+        print(
+            f"[FINEP] Erro HTTP: {erro}"
+        )
+
+    except Exception as erro:
+
+        print(
+            f"[FINEP] Erro: {erro}"
+        )
+
+    return resultados
