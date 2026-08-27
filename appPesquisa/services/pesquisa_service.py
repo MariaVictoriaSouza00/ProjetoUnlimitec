@@ -19,7 +19,7 @@ def pesquisar_editais(termo):
     # titulos.extend(obter_titulos_cnpq())
 
     titulos.extend(obter_titulos_fapesp())
-    titulos.extend(obter_titulos_fapergs())
+   # titulos.extend(obter_titulos_fapergs())
 
     print(titulos)
     print({len(titulos)})
