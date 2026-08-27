@@ -1,55 +1,226 @@
-import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
+import time
+
+
+URL = "https://fapergs.rs.gov.br/abertos"
+URL_BASE = "https://fapergs.rs.gov.br"
+
 
 def obter_titulos_fapergs():
-    url_lista = "https://fapergs.rs.gov.br/abertos"
+
     dados = []
 
+    # ==========================================================
+    # CONFIGURAÇÃO DO CHROME
+    # ==========================================================
+
+    options = Options()
+
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    options.add_argument(
+        "--window-size=1920,1080"
+    )
+
+    options.add_argument(
+        "--disable-blink-features=AutomationControlled"
+    )
+
+    options.add_argument(
+        "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/151.0.0.0 Safari/537.36"
+    )
+
+    driver = webdriver.Chrome(
+        options=options
+    )
+
     try:
-        # 1. Baixa a página com a lista de editais
-        response = requests.get(url_lista, timeout=10)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, "html.parser")
 
-        # 2. Seleciona os blocos da lista (equivalente ao seu seletor Selenium)
-        elementos = soup.select("div.matriz-ui-pagedlist-body article.conteudo-lista__item")
+        print("Acessando FAPERGS...")
 
-        for el in elementos:
-            try:
-                # Título e link
-                titulo_tag = el.select_one("h2.conteudo-lista__item__titulo a")
-                if not titulo_tag:
-                    continue
+        driver.get(URL)
 
-                titulo = titulo_tag.get_text(strip=True)
-                link = titulo_tag["href"]
+        # ======================================================
+        # ESPERA A PÁGINA CARREGAR
+        # ======================================================
 
-                # A FAPERGS usa links relativos → corrigimos para link absoluto
-                if link.startswith("/"):
-                    link = "https://fapergs.rs.gov.br" + link
+        wait = WebDriverWait(
+            driver,
+            30
+        )
 
-                # 3. Acessa a página do edital (equivalente ao driver.get)
-                response_edital = requests.get(link, timeout=10)
-                response_edital.raise_for_status()
+        # Espera o container da lista
+        wait.until(
+            EC.presence_of_element_located(
+                (
+                    By.CSS_SELECTOR,
+                    "div.conteudo-lista__body"
+                )
+            )
+        )
 
-                soup_edital = BeautifulSoup(response_edital.text, "html.parser")
+        print("Container encontrado.")
 
-                # 4. Extrai o texto do edital (equivalente ao driver.find_element)
-                texto_tag = soup_edital.select_one("div.artigo__texto")
-                texto = texto_tag.get_text(strip=True) if texto_tag else ""
+        # Dá alguns segundos para a paginação/conteúdo
+        # terminar de ser carregado
+        time.sleep(5)
 
-                dados.append({
-                    "titulo": titulo,
-                    "link": link,
-                    "resumo": texto
-                })
+        # ======================================================
+        # PEGA O HTML JÁ PROCESSADO PELO NAVEGADOR
+        # ======================================================
 
-            except Exception as e:
-                # Se algum edital der erro, ignora e segue
+        html = driver.page_source
+
+        # Salva para debug
+        with open(
+            "fapergs_debug.html",
+            "w",
+            encoding="utf-8"
+        ) as arquivo:
+
+            arquivo.write(html)
+
+        print(
+            "HTML salvo em fapergs_debug.html"
+        )
+
+        # ======================================================
+        # BEAUTIFULSOUP
+        # ======================================================
+
+        soup = BeautifulSoup(
+            html,
+            "html.parser"
+        )
+
+        # ======================================================
+        # LOCALIZA OS ARTIGOS
+        # ======================================================
+
+        artigos = soup.select(
+            "div.conteudo-lista__body "
+            "article.conteudo-lista__item"
+        )
+
+        print(
+            "Artigos encontrados:",
+            len(artigos)
+        )
+
+        # ======================================================
+        # PERCORRE OS EDITAIS
+        # ======================================================
+
+        for artigo in artigos:
+
+            # --------------------------------------------------
+            # TÍTULO
+            # --------------------------------------------------
+
+            titulo_tag = artigo.select_one(
+                "h2 a"
+            )
+
+            if not titulo_tag:
                 continue
+
+            titulo = titulo_tag.get_text(
+                " ",
+                strip=True
+            )
+
+            # --------------------------------------------------
+            # LINK
+            # --------------------------------------------------
+
+            href = titulo_tag.get(
+                "href"
+            )
+
+            if not href:
+                continue
+
+            link = urljoin(
+                URL_BASE,
+                href
+            )
+
+            # --------------------------------------------------
+            # STATUS
+            # --------------------------------------------------
+
+            status_tag = artigo.select_one(
+                ".lista-categoria a"
+            )
+
+            status = ""
+
+            if status_tag:
+
+                status = status_tag.get_text(
+                    " ",
+                    strip=True
+                )
+
+            # --------------------------------------------------
+            # DESCRIÇÃO
+            # --------------------------------------------------
+
+            descricao = ""
+
+            descricao_tag = artigo.select_one(
+                ".conteudo-lista__item__descricao"
+            )
+
+            if descricao_tag:
+
+                descricao = descricao_tag.get_text(
+                    " ",
+                    strip=True
+                )
+
+            # --------------------------------------------------
+            # ADICIONA
+            # --------------------------------------------------
+
+            dados.append({
+
+                "titulo": titulo,
+
+                "link": link,
+
+                "status": status,
+
+                "descricao": descricao
+
+            })
 
         return dados
 
     except Exception as e:
-        print("Erro no scraper FAPERGS:", e)
+
+        print(
+            "Erro ao obter editais da FAPERGS:"
+        )
+
+        print(e)
+
         return []
+
+    finally:
+
+        driver.quit()
+
