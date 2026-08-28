@@ -1,7 +1,7 @@
 from appPesquisa.scrapers.finep import obter_titulos_finep
 from appPesquisa.scrapers.cnpq import obter_titulos_cnpq
 from appPesquisa.scrapers.fapesp import obter_titulos_fapesp
-from appPesquisa.scrapers.fapergs import obter_titulos_fapergs
+#from appPesquisa.scrapers.fapergs import obter_titulos_fapergs
 
 from appPesquisa.services.sinonimos import obter_sinonimos_api
 
