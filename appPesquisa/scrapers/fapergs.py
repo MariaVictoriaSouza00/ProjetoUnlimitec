@@ -1,226 +1,226 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+# from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
 
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin
+# from bs4 import BeautifulSoup
+# from urllib.parse import urljoin
 
-import time
+# import time
 
 
-URL = "https://fapergs.rs.gov.br/abertos"
-URL_BASE = "https://fapergs.rs.gov.br"
+# URL = "https://fapergs.rs.gov.br/abertos"
+# URL_BASE = "https://fapergs.rs.gov.br"
 
 
-def obter_titulos_fapergs():
+# def obter_titulos_fapergs():
 
-    dados = []
+#     dados = []
 
-    # ==========================================================
-    # CONFIGURAÇÃO DO CHROME
-    # ==========================================================
+#     # ==========================================================
+#     # CONFIGURAÇÃO DO CHROME
+#     # ==========================================================
 
-    options = Options()
+#     options = Options()
 
-    options.add_argument("--headless=new")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+#     options.add_argument("--headless=new")
+#     options.add_argument("--disable-gpu")
+#     options.add_argument("--no-sandbox")
+#     options.add_argument("--disable-dev-shm-usage")
 
-    options.add_argument(
-        "--window-size=1920,1080"
-    )
+#     options.add_argument(
+#         "--window-size=1920,1080"
+#     )
 
-    options.add_argument(
-        "--disable-blink-features=AutomationControlled"
-    )
+#     options.add_argument(
+#         "--disable-blink-features=AutomationControlled"
+#     )
 
-    options.add_argument(
-        "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/151.0.0.0 Safari/537.36"
-    )
+#     options.add_argument(
+#         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+#         "AppleWebKit/537.36 (KHTML, like Gecko) "
+#         "Chrome/151.0.0.0 Safari/537.36"
+#     )
 
-    driver = webdriver.Chrome(
-        options=options
-    )
+#     driver = webdriver.Chrome(
+#         options=options
+#     )
 
-    try:
+#     try:
 
-        print("Acessando FAPERGS...")
+#         print("Acessando FAPERGS...")
 
-        driver.get(URL)
+#         driver.get(URL)
 
-        # ======================================================
-        # ESPERA A PÁGINA CARREGAR
-        # ======================================================
+#         # ======================================================
+#         # ESPERA A PÁGINA CARREGAR
+#         # ======================================================
 
-        wait = WebDriverWait(
-            driver,
-            30
-        )
+#         wait = WebDriverWait(
+#             driver,
+#             30
+#         )
 
-        # Espera o container da lista
-        wait.until(
-            EC.presence_of_element_located(
-                (
-                    By.CSS_SELECTOR,
-                    "div.conteudo-lista__body"
-                )
-            )
-        )
+#         # Espera o container da lista
+#         wait.until(
+#             EC.presence_of_element_located(
+#                 (
+#                     By.CSS_SELECTOR,
+#                     "div.conteudo-lista__body"
+#                 )
+#             )
+#         )
 
-        print("Container encontrado.")
+#         print("Container encontrado.")
 
-        # Dá alguns segundos para a paginação/conteúdo
-        # terminar de ser carregado
-        time.sleep(5)
+#         # Dá alguns segundos para a paginação/conteúdo
+#         # terminar de ser carregado
+#         time.sleep(5)
 
-        # ======================================================
-        # PEGA O HTML JÁ PROCESSADO PELO NAVEGADOR
-        # ======================================================
+#         # ======================================================
+#         # PEGA O HTML JÁ PROCESSADO PELO NAVEGADOR
+#         # ======================================================
 
-        html = driver.page_source
+#         html = driver.page_source
 
-        # Salva para debug
-        with open(
-            "fapergs_debug.html",
-            "w",
-            encoding="utf-8"
-        ) as arquivo:
+#         # Salva para debug
+#         with open(
+#             "fapergs_debug.html",
+#             "w",
+#             encoding="utf-8"
+#         ) as arquivo:
 
-            arquivo.write(html)
+#             arquivo.write(html)
 
-        print(
-            "HTML salvo em fapergs_debug.html"
-        )
+#         print(
+#             "HTML salvo em fapergs_debug.html"
+#         )
 
-        # ======================================================
-        # BEAUTIFULSOUP
-        # ======================================================
+#         # ======================================================
+#         # BEAUTIFULSOUP
+#         # ======================================================
 
-        soup = BeautifulSoup(
-            html,
-            "html.parser"
-        )
+#         soup = BeautifulSoup(
+#             html,
+#             "html.parser"
+#         )
 
-        # ======================================================
-        # LOCALIZA OS ARTIGOS
-        # ======================================================
+#         # ======================================================
+#         # LOCALIZA OS ARTIGOS
+#         # ======================================================
 
-        artigos = soup.select(
-            "div.conteudo-lista__body "
-            "article.conteudo-lista__item"
-        )
+#         artigos = soup.select(
+#             "div.conteudo-lista__body "
+#             "article.conteudo-lista__item"
+#         )
 
-        print(
-            "Artigos encontrados:",
-            len(artigos)
-        )
+#         print(
+#             "Artigos encontrados:",
+#             len(artigos)
+#         )
 
-        # ======================================================
-        # PERCORRE OS EDITAIS
-        # ======================================================
+#         # ======================================================
+#         # PERCORRE OS EDITAIS
+#         # ======================================================
 
-        for artigo in artigos:
+#         for artigo in artigos:
 
-            # --------------------------------------------------
-            # TÍTULO
-            # --------------------------------------------------
+#             # --------------------------------------------------
+#             # TÍTULO
+#             # --------------------------------------------------
 
-            titulo_tag = artigo.select_one(
-                "h2 a"
-            )
+#             titulo_tag = artigo.select_one(
+#                 "h2 a"
+#             )
 
-            if not titulo_tag:
-                continue
+#             if not titulo_tag:
+#                 continue
 
-            titulo = titulo_tag.get_text(
-                " ",
-                strip=True
-            )
+#             titulo = titulo_tag.get_text(
+#                 " ",
+#                 strip=True
+#             )
 
-            # --------------------------------------------------
-            # LINK
-            # --------------------------------------------------
+#             # --------------------------------------------------
+#             # LINK
+#             # --------------------------------------------------
 
-            href = titulo_tag.get(
-                "href"
-            )
+#             href = titulo_tag.get(
+#                 "href"
+#             )
 
-            if not href:
-                continue
+#             if not href:
+#                 continue
 
-            link = urljoin(
-                URL_BASE,
-                href
-            )
+#             link = urljoin(
+#                 URL_BASE,
+#                 href
+#             )
 
-            # --------------------------------------------------
-            # STATUS
-            # --------------------------------------------------
+#             # --------------------------------------------------
+#             # STATUS
+#             # --------------------------------------------------
 
-            status_tag = artigo.select_one(
-                ".lista-categoria a"
-            )
+#             status_tag = artigo.select_one(
+#                 ".lista-categoria a"
+#             )
 
-            status = ""
+#             status = ""
 
-            if status_tag:
+#             if status_tag:
 
-                status = status_tag.get_text(
-                    " ",
-                    strip=True
-                )
+#                 status = status_tag.get_text(
+#                     " ",
+#                     strip=True
+#                 )
 
-            # --------------------------------------------------
-            # DESCRIÇÃO
-            # --------------------------------------------------
+#             # --------------------------------------------------
+#             # DESCRIÇÃO
+#             # --------------------------------------------------
 
-            descricao = ""
+#             descricao = ""
 
-            descricao_tag = artigo.select_one(
-                ".conteudo-lista__item__descricao"
-            )
+#             descricao_tag = artigo.select_one(
+#                 ".conteudo-lista__item__descricao"
+#             )
 
-            if descricao_tag:
+#             if descricao_tag:
 
-                descricao = descricao_tag.get_text(
-                    " ",
-                    strip=True
-                )
+#                 descricao = descricao_tag.get_text(
+#                     " ",
+#                     strip=True
+#                 )
 
-            # --------------------------------------------------
-            # ADICIONA
-            # --------------------------------------------------
+#             # --------------------------------------------------
+#             # ADICIONA
+#             # --------------------------------------------------
 
-            dados.append({
+#             dados.append({
 
-                "titulo": titulo,
+#                 "titulo": titulo,
 
-                "link": link,
+#                 "link": link,
 
-                "status": status,
+#                 "status": status,
 
-                "descricao": descricao
+#                 "descricao": descricao
 
-            })
+#             })
 
-        return dados
+#         return dados
 
-    except Exception as e:
+#     except Exception as e:
 
-        print(
-            "Erro ao obter editais da FAPERGS:"
-        )
+#         print(
+#             "Erro ao obter editais da FAPERGS:"
+#         )
 
-        print(e)
+#         print(e)
 
-        return []
+#         return []
 
-    finally:
+#     finally:
 
-        driver.quit()
+#         driver.quit()
 
