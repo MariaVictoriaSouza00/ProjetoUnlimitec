@@ -39,15 +39,25 @@ def remover_acentos(texto):
 
   
 def pesquisar_editais(termo):
-
     titulos = []
 
-    # titulos.extend(obter_titulos_finep())
-    titulos.extend(obter_titulos_cnpq())
-    titulos.extend(obter_titulos_fapesp())
-    # titulos.extend(obter_titulos_fapergs())
+    fontes = [
+        ("CNPq", obter_titulos_cnpq),
+        ("FAPESP", obter_titulos_fapesp),
+        # ("FINEP", obter_titulos_finep),
+        # ("FAPERGS", obter_titulos_fapergs),
+    ]
 
-    # Remove acentos do termo pesquisado
+    for nome, funcao in fontes:
+        try:
+            editais = funcao()
+            titulos.extend(editais or [])
+            print(
+                f"{nome}: {len(editais or [])} editais obtidos."
+            )
+        except Exception as erro:
+            print(f"Erro na fonte {nome}: {erro}")
+
     termo = remover_acentos(termo.strip())
 
     resultados = [
@@ -60,5 +70,4 @@ def pesquisar_editais(termo):
     ]
 
     print(f"Total encontrados: {len(resultados)}")
-
     return resultados
