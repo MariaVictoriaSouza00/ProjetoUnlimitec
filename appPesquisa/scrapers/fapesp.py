@@ -192,7 +192,7 @@ def obter_titulos_fapesp():
     )
 
     print(
-        f"\nTotal encontrado: {len(dados)}"
+        f"\nTotal encontrado Fapesp: {len(dados)}"
     )
 
     if faltando:
